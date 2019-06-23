@@ -26,7 +26,7 @@ CREATE TABLE answers (
 CREATE TABLE user_information (
     user_id VARCHAR NOT NULL PRIMARY KEY,
     user_name VARCHAR
-)
+);
 
 INSERT INTO questions VALUES ("indent", "이 인덴트를 쓰는 방법은 무엇인가요?");
 INSERT INTO choices VALUES ("indent", "tab", "탭", "");
