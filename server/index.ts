@@ -1,6 +1,6 @@
 import * as express from "express"
 import * as sqlite3 from "sqlite3"
-
+import * as uuidv5 from "uuid/v5"
 
 interface RegisterQNAPayload {
   userId: string,
@@ -72,7 +72,7 @@ class App {
       }
     })
 
-    this.app.get("/get-questions", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    this.app.get("/get-random-questions", (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(req.ip)
 
       this.db.all(`
@@ -131,6 +131,54 @@ class App {
           throw e
         }
       }
+    })
+
+    this.app.post("/get-question-info", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.log(req.ip)
+      try {
+        const questionId = getChoicesPayloadCaster(req.body).questionId
+        this.db.all(`
+          SELECT
+            questions.contents
+          FROM
+            questions
+          WHERE
+            questions.question_id = ?
+        `, [questionId], (err, rows) => {
+          if (err) {
+            throw err
+          }
+          if (rows.length === 0) {
+            res.send(JSON.stringify({ status: "falied", reason: `no such question '${questionId}'` }))
+          }
+          else {
+            res.send(JSON.stringify({
+              status: "success",
+              payload: { text: rows[0]['contents'] }
+            }))
+          }
+        })
+      }
+      catch (e) {
+        if (e instanceof TypeError) {
+          console.log(req.body['payload'])
+          res.send(JSON.stringify({ status: "falied", reason: "payload is not valid" }))
+        }
+        else {
+          throw e
+        }
+      }
+    })
+
+    this.app.get("/get-user-id", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.log(req.ip)
+      const uuid = uuidv5(req.ip, req.hostname)
+      res.send(JSON.stringify({
+        status: "success",
+        payload: {
+          userId: uuid
+        }
+      }))
     })
   }
 }
