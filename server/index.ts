@@ -1,5 +1,6 @@
 import * as express from "express"
-import * as uuidv5 from "uuid/v5"
+import * as cors from "cors"
+import * as uuidv1 from "uuid/v1"
 import {DAO} from "./DAO"
 import * as _ from "lodash"
 import {QNA} from "../common/QNA"
@@ -49,15 +50,16 @@ class App {
   constructor() {
     this.app = express()
     this.app.use(express.json())
+    this.app.use(cors())
 
     this.app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(req.ip)
-      res.send("{zimzalabim}")
+      res.send("Zimzalabim!")
     })
 
     this.app.get("/get-user-id", (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(req.ip)
-      const uuid = uuidv5(req.ip, req.hostname)
+      const uuid = uuidv1()
       res.send(JSON.stringify({
         status: "success",
         payload: {
