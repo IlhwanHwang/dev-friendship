@@ -1,21 +1,29 @@
 import * as React from 'react';
 import { QNA, Choice } from '../common/QNA';
+import * as request from 'request';
 
+const ServerName = "localhost:3000"
 
 export default class Selector extends React.Component {
-  props: { qnas: QNA[], make: boolean }
+  props: { questionIds: string[], make: boolean }
 
   state = {
     qnaIndex: 0,
     chosen: false,
-    chosenAnswer: null
+    chosenAnswer: null,
+    currentQNA: {
+      id: undefined,
+      question: undefined,
+      choices: undefined,
+      answer: undefined
+    }
   };
 
   chooseAnswer = (id: string) => {
     this.setState({ chosen: true, chosenAnswer: id })
     setTimeout(this.nextAnswer, 1000)
   }
-
+  
   nextAnswer = () => {
     this.setState({ chosen: false, qnaIndex: (this.state.qnaIndex + 1) })
   }

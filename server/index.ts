@@ -1,6 +1,8 @@
 import * as express from "express"
-import * as sqlite3 from "sqlite3"
 import * as uuidv5 from "uuid/v5"
+import {DAO} from "./DAO"
+import * as _ from "lodash"
+import {QNA} from "../common/QNA"
 
 interface RegisterQNAPayload {
   userId: string,
@@ -27,9 +29,18 @@ const getChoicesPayloadCaster = (obj: any) => {
   return body
 }
 
+const getQNAPayloadCaster = (obj: any) => {
+  const body = obj as { userId: string }
+  if (body.userId === undefined) {
+    throw TypeError(`${obj} cannot be cast to GetQNAPayload`)
+  }
+  return body
+}
+
+
 class App {
   public app: express.Application
-  public db = new sqlite3.Database("dev-friendship.db")
+  public dao = DAO.bootstrap()
 
   public static bootstrap(): App {
     return new App()
@@ -41,133 +52,7 @@ class App {
 
     this.app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(req.ip)
-      res.send("{}")
-    })
-
-    this.app.post("/register-qna", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
-
-      try {
-        const payload = registerQNAPayloadCaster(JSON.parse(req.body['payload']))
-        const query = `INSERT INTO user_information VALUES (?, ?);\n` + 
-          payload.qnas
-            .map((qna: any) => `INSERT INTO answers VALUES (?, ?, ?);`)
-            .join("\n")
-        const params = [payload.userName, payload.userName]
-          .concat(...payload.qnas.map((qna: any) => [payload.qnas, qna.questionId, qna.choiceId]))
-        this.db.run(query, params, (err) => {
-          if (err) {
-            throw err;
-          }
-          res.send(JSON.stringify({ status: "success" }))
-        })
-      }
-      catch (e) {
-        if (e instanceof TypeError) {
-          res.send(JSON.stringify({ status: "falied", reason: "payload is not valid" }))
-        }
-        else {
-          throw e
-        }
-      }
-    })
-
-    this.app.get("/get-random-questions", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
-
-      this.db.all(`
-        SELECT
-          questions.question_id
-        FROM
-          questions
-        ORDER BY
-          RANDOM()
-        LIMIT
-          20
-      `, [], (err, rows) => {
-        if (err) {
-          throw err;
-        }
-        res.send(JSON.stringify({
-          status: "success",
-          payload: rows.map(row => row['question_id'])
-        }))
-      })
-    })
-
-    this.app.post("/get-choices", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
-      try {
-        const questionId = getChoicesPayloadCaster(req.body).questionId
-        this.db.all(`
-          SELECT
-            choices.choice_id,
-            choices.contents
-          FROM
-            choices
-          WHERE
-            choices.question_id = ?
-        `, [questionId], (err, rows) => {
-          if (err) {
-            throw err
-          }
-          if (rows.length === 0) {
-            res.send(JSON.stringify({ status: "falied", reason: `no such question '${questionId}'` }))
-          }
-          else {
-            res.send(JSON.stringify({
-              status: "success",
-              payload: rows.map(row => { return { id: row['choice_id'], text: row['contents'] } })
-            }))
-          }
-        })
-      }
-      catch (e) {
-        if (e instanceof TypeError) {
-          console.log(req.body['payload'])
-          res.send(JSON.stringify({ status: "falied", reason: "payload is not valid" }))
-        }
-        else {
-          throw e
-        }
-      }
-    })
-
-    this.app.post("/get-question-info", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
-      try {
-        const questionId = getChoicesPayloadCaster(req.body).questionId
-        this.db.all(`
-          SELECT
-            questions.contents
-          FROM
-            questions
-          WHERE
-            questions.question_id = ?
-        `, [questionId], (err, rows) => {
-          if (err) {
-            throw err
-          }
-          if (rows.length === 0) {
-            res.send(JSON.stringify({ status: "falied", reason: `no such question '${questionId}'` }))
-          }
-          else {
-            res.send(JSON.stringify({
-              status: "success",
-              payload: { text: rows[0]['contents'] }
-            }))
-          }
-        })
-      }
-      catch (e) {
-        if (e instanceof TypeError) {
-          console.log(req.body['payload'])
-          res.send(JSON.stringify({ status: "falied", reason: "payload is not valid" }))
-        }
-        else {
-          throw e
-        }
-      }
+      res.send("{zimzalabim}")
     })
 
     this.app.get("/get-user-id", (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -180,11 +65,36 @@ class App {
         }
       }))
     })
+
+    this.app.post("/get-qnas", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.log(req.ip)
+      const userId = getQNAPayloadCaster(req.body).userId
+      const questions = userId !== "" ? 
+        (await this.dao.getUserQuestions(userId)).map(row => row['question_id']) :
+        (await this.dao.getNewQuestions()).map(row => row['question_id'])
+
+      const questionInfos = await Promise.all(questions.map(questionId => this.dao.getQuestionInfo(questionId)))
+      const choices = await Promise.all(questions.map(questionId => this.dao.getChoices(questionId)))
+
+      const answers = userId !== "" ? 
+        await Promise.all(questions.map(questionId => this.dao.getAnswer(userId, questionId))) :
+        questions.map(question => { return { choice_id: "" } })
+
+      const payload: QNA[] = _.zip(questions, questionInfos, choices, answers)
+        .map(([questionId, questionInfo, choices, answer]) => { return {
+          id: questionId!,
+          question: questionInfo!['contents'],
+          choices: choices!.map(choice => { return { id: choice['choice_id'], text: choice['contents'] } }),
+          answer: answer!['choice_id']
+        }})
+      res.send(JSON.stringify(payload))
+    })
   }
 }
 
 const port: number = Number(process.env.PORT) || 3000;
 const app: express.Application = new App().app;
 
-app.listen(port, () => console.log(`Express server listening at ${port}`))
-.on('error', err => console.error(err));
+app
+  .listen(port, () => console.log(`Express server listening at ${port}`))
+  .on('error', err => console.error(err));
