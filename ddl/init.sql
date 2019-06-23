@@ -28,6 +28,13 @@ CREATE TABLE user_information (
     user_name VARCHAR
 );
 
+CREATE TABLE score_board (
+    nonce VARCHAR NOT NULL PRIMARY KEY,
+    user_id VARCHAR NOT NULL,
+    user_name VARCHAR,
+    score INT
+);
+
 INSERT INTO questions VALUES ("indent", "이 인덴트를 쓰는 방법은 무엇인가요?");
 INSERT INTO choices VALUES ("indent", "tab", "탭", "");
 INSERT INTO choices VALUES ("indent", "space", "스페이스", "");

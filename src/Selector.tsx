@@ -1,17 +1,6 @@
 import * as React from 'react';
+import { QNA, Choice } from '../common/QNA';
 
-
-export interface Choice {
-  id: string,
-  text: string
-}
-
-export interface QNA {
-  id: string,
-  question: string,
-  choices: Choice[],
-  answer: string
-}
 
 export default class Selector extends React.Component {
   props: { qnas: QNA[], make: boolean }
