@@ -60,6 +60,13 @@ const submitAnswersPayloadCaster = (obj: any) => {
   return body
 }
 
+const getScoreBoardPayloadCaster = (obj: any) => {
+  const body = obj as { userId: string }
+  if (body.userId === undefined) {
+    throw TypeError(`${JSON.stringify(obj)} cannot be cast to GetScoreBoardPayloadCaster`)
+  }
+  return body
+}
 
 class App {
   public app: express.Application
@@ -133,7 +140,7 @@ class App {
     }))
 
     this.app.post("/submit-answers", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(`submit-qnas ${req.ip}`)
+      console.log(`submit-answers ${req.ip}`)
       const body = submitAnswersPayloadCaster(req.body)
       await this.dao.addUserInfomation(body.solverUserId, body.solverUserName)
       const questions = (await this.dao.getUserQuestions(body.sourceUserId)).map(row => row['question_id'])
@@ -142,6 +149,17 @@ class App {
       await this.dao.addScore(body.sourceUserId, body.solverUserId, score)
       res.send(JSON.stringify({
         success: true
+      }))
+    }))
+
+    this.app.post("/get-score-board", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.log(`get-score-board ${req.ip}`)
+      const body = getScoreBoardPayloadCaster(req.body)
+      const results = await this.dao.getScoreBoard(body.userId)
+      const names = (await Promise.all(results.map(result => this.dao.getUserInformation(result.userId)))).map(row => row.userName)
+      res.send(JSON.stringify({
+        success: true,
+        payload: _.zip(results, names).map(([result, name]) => { return { name: name!, score: result!.score, created: result!.created } })
       }))
     }))
   }

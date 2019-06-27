@@ -158,7 +158,7 @@ export class DAO {
   addScore = (sourceUserId: string, solverUserId: string, score: number) => {
     return new Promise((resolve, reject) => {
       this.db.run(`
-        INSERT INTO user_information
+        INSERT INTO score_board
           VALUES (
             ?,
             ?,
@@ -170,6 +170,24 @@ export class DAO {
           reject(err)
         }
         resolve()
+      })
+    })
+  }
+
+  getScoreBoard = (userId: string) => {
+    return new Promise<{ userId: string, created: number, score: number }[]>((resolve, reject) => {
+      this.db.all(`
+        SELECT
+          *
+        FROM
+          score_board
+        WHERE
+          source_user_id = ?
+      `, [userId], (err, rows) => {
+        if (err) {
+          reject(err)
+        }
+        return rows.map(row => { return { userId: row['user_id'], created: row['created'], score: row['score'] } })
       })
     })
   }
