@@ -11,9 +11,9 @@ interface SubmitQNAPayload {
   qnas: { questionId: string, choiceId: string }[]
 }
 
-const asyncWrapper = <T> (fun: (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<T>) => 
+const asyncWrapper = <T> (handler: (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<T>) => 
   async (req: express.Request, res: express.Response, next: express.NextFunction) =>
-  await fun(req, res, next).catch(next)
+  await handler(req, res, next).catch(next)
 
 const submitQNAPayloadCaster = (obj: any) => {
   const body = obj as SubmitQNAPayload
@@ -100,7 +100,7 @@ class App {
     this.app.post("/get-user-information", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`get-user-information ${req.ip}`)
       const userId = getUserInformationPayloadCaster(req.body).userId
-      const information = await this.dao.getUserInformation(userId)
+      const information = await this.dao.getUserInformation(userId).catch(next)
       const payload = information
       res.send(JSON.stringify({ success: true, payload: payload }))
     }))
@@ -146,6 +146,7 @@ class App {
       const questions = (await this.dao.getUserQuestions(body.sourceUserId)).map(row => row['question_id'])
       const answers = (await Promise.all(questions.map(questionId => this.dao.getAnswer(body.sourceUserId, questionId)))).map(answer => answer.choice_id)
       const score = _.zip(answers, body.answers).filter((pair) => pair[0] === pair[1]).length
+      console.log(JSON.stringify(_.zip(answers, body.answers)))
       await this.dao.addScore(body.sourceUserId, body.solverUserId, score)
       res.send(JSON.stringify({
         success: true
@@ -159,7 +160,9 @@ class App {
       const names = (await Promise.all(results.map(result => this.dao.getUserInformation(result.userId)))).map(row => row.userName)
       res.send(JSON.stringify({
         success: true,
-        payload: _.zip(results, names).map(([result, name]) => { return { name: name!, score: result!.score, created: result!.created } })
+        payload: {
+          scoreBoard: _.zip(results, names).map(([result, name]) => { return { userId: result!.userId, name: name!, score: result!.score, created: result!.created } })
+        }
       }))
     }))
   }

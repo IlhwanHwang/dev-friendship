@@ -1,9 +1,10 @@
-import * as React from 'react';
-import { QNA } from '../common/QNA';
+import * as React from 'react'
+import { QNA } from '../common/QNA'
 import * as api from './api'
 import { Redirect } from 'react-router';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import * as queryString from 'query-string';
+import ScoreBoard from './ScoreBoard';
 
 export default class Solve extends React.Component<RouteComponentProps> {
   state = {
@@ -32,7 +33,6 @@ export default class Solve extends React.Component<RouteComponentProps> {
       this.setState({ page: "exception" })
       return
     }
-    console.log(response1)
     const userInformation = response1['payload']
     this.sourceUserName = userInformation['userName']
 
@@ -47,7 +47,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
       this.setState({ page: "exception" })
       return
     }
-    this.userId = response1['payload']
+    this.userId = response1['payload']['userId']
 
     const response2 = await api.postRequest("get-qnas", { userId: this.sourceUserId })
     if (!response2['success']) {
@@ -85,7 +85,11 @@ export default class Solve extends React.Component<RouteComponentProps> {
   }
 
   chooseAnswer = async (id: string) => {
-    if (this.state.qnaIndex >= this.qnas.length) {
+    this.answers[this.state.qnaIndex] = id
+    this.setState({ page: "qnas-pause", choice: id })
+    await new Promise((resolve, reject) => setTimeout(() => { resolve() }, 1000))
+
+    if (this.state.qnaIndex >= this.qnas.length - 1) {
       this.setState({ page: "submit" })
       const response1 = await api.postRequest("submit-answers", {
         sourceUserId: this.sourceUserId,
@@ -98,12 +102,9 @@ export default class Solve extends React.Component<RouteComponentProps> {
         return
       }
 
-      this.setState({ page: "done" })
+      this.setState({ page: "main", qnaIndex: 0 })
     }
     else {
-      this.answers[this.state.qnaIndex] = id
-      this.setState({ page: "qnas-pause", choice: id })
-      await new Promise((resolve, reject) => setTimeout(() => { resolve() }, 1000)) 
       this.setState({ page: "qnas", qnaIndex: this.state.qnaIndex + 1 })
     }
   }
@@ -117,6 +118,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
       <div>
         <span>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</span>
         <button onClick={this.onStartSolve}>우정테스트 시작</button>
+        <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
       </div>
       )
     }
@@ -165,14 +167,6 @@ export default class Solve extends React.Component<RouteComponentProps> {
     }
     else if (this.state.page === "submit") {
       return <div>점수 매기는 중...</div>
-    }
-    else if (this.state.page === "done") {
-      return (
-        <div>
-          <div>완료! 친구들에게 링크를 공유하세요.</div>
-          <Link to={`/solve/:${this.userId}`}></Link>
-        </div>
-      )
     }
     else {
       return <Redirect to="/exception"></Redirect>

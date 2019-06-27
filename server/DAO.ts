@@ -130,10 +130,12 @@ export class DAO {
         if (err) {
           reject(err);
         }
-        if (rows.length === 0) {
-          reject(Error(`No such user ${userId}`))
+        if (rows.length >= 1) {
+          resolve({ userName: rows[0]['user_name'] })
         }
-        resolve({ userName: rows[0]['user_name'] })
+        else {
+          reject(`No such user ${userId}`)
+        }
       })
     })
   }
@@ -187,7 +189,12 @@ export class DAO {
         if (err) {
           reject(err)
         }
-        return rows.map(row => { return { userId: row['user_id'], created: row['created'], score: row['score'] } })
+        if (rows) {
+          return resolve(rows.map(row => { return { userId: row['solver_user_id'], created: row['created'], score: row['score'] } }))
+        }
+        else {
+          return resolve([])
+        }
       })
     })
   }

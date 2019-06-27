@@ -1,9 +1,10 @@
-import * as React from 'react';
-import { QNA } from '../common/QNA';
+import * as React from 'react'
+import { QNA } from '../common/QNA'
 import * as api from './api'
-import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router'
+import { Link } from 'react-router-dom'
 import * as Config from './Config'
+import * as utils from './utils'
 
 export default class Make extends React.Component {
   state = {
@@ -65,6 +66,8 @@ export default class Make extends React.Component {
   }
 
   chooseAnswer = async (id: string) => {
+    this.qnas[this.state.qnaIndex].answer = id
+
     if (this.state.qnaIndex >= this.qnas.length - 1) {
       this.setState({ page: "submit" })
       const response1 = await api.postRequest("submit-qnas", {
@@ -80,7 +83,6 @@ export default class Make extends React.Component {
       this.setState({ page: "done" })
     }
     else {
-      this.qnas[this.state.qnaIndex].answer = id
       this.setState({ qnaIndex: this.state.qnaIndex + 1 })
     }
   }
