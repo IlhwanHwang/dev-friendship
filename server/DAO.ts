@@ -117,7 +117,25 @@ export class DAO {
     })
   }
 
-  addUserInfo = (userId: string, userName: string) => {
+  getUserInformation = (userId: string) => {
+    return new Promise<{ contents: string }>((resolve, reject) => {
+      this.db.all(`
+        SELECT
+          *
+        FROM
+          user_information
+        WHERE
+          user_information.user_id = ?
+      `, [userId], (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows[0])
+      })
+    })
+  }
+
+  addUserInfomation = (userId: string, userName: string) => {
     return new Promise((resolve, reject) => {
       this.db.run(`
         INSERT INTO user_information

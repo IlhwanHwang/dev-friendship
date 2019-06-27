@@ -2,25 +2,40 @@ import * as React from 'react';
 import { QNA } from '../common/QNA';
 import * as api from './api'
 import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
-export default class Make extends React.Component {
+export default class Solve extends React.Component<RouteComponentProps> {
   state = {
-    page: "load",
+    page: "pre-load",
     qnaIndex: 0,
     name: ""
   }
 
   userId = null
+  sourceUserId = null
+  sourceUserName = null
   qnas: QNA[] = []
   answers = []
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.load()
   }
 
   load = async () => {
+    const response1 = await api.postRequest("get-user-information", {})
+    if (!response1['success']) {
+      this.setState({ page: "exception" })
+      return
+    }
+    this.userId = response1['payload']
+
+    this.setState({ page: "main" })
+  }
+
+  onStartSolve = async () => {
+    this.setState({ page: "load" })
+
     const response1 = await api.postRequest("get-user-id", {})
     if (!response1['success']) {
       this.setState({ page: "exception" })
@@ -28,7 +43,7 @@ export default class Make extends React.Component {
     }
     this.userId = response1['payload']
 
-    const response2 = await api.postRequest("get-qnas", { userId: "" })
+    const response2 = await api.postRequest("get-qnas", { userId: this.props.match.params['sourceUserId'] })
     if (!response2['success']) {
       this.setState({ page: "exception" })
       return
@@ -87,6 +102,17 @@ export default class Make extends React.Component {
   render = () => {
     if (this.state.page === "exception") {
       return <Redirect to="/exception"></Redirect>
+    }
+    else if (this.state.page === "pre-load") {
+      return <div>정보 가져오는 중...</div>
+    }
+    else if (this.state.page === "main") {
+      return (
+      <div>
+        <span>{this.sourceUserName}의 개발자 우정테스트</span>
+        <button onClick={this.onStartSolve}>우정테스트 시작</button>
+      </div>
+      )
     }
     else if (this.state.page === "load") {
       return <div>질문 받아오는 중...</div>

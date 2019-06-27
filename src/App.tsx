@@ -4,6 +4,7 @@ import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import Make from './Make'
 import Exception from './Exception';
 import Home from './Home';
+import Solve from './Solve';
 
 class App extends React.Component {
   render () {
@@ -13,7 +14,7 @@ class App extends React.Component {
           <Switch>
             <Route path="/exception" component={Exception}/>
             <Route path="/make" component={Make}/>
-            {/* <Route path="/solve" component={Solve}/> */}
+            <Route path="/solve" component={Solve}/>
             <Route path="/" component={Home}/>
           </Switch>
         </div>

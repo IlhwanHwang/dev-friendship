@@ -22,10 +22,10 @@ const submitQNAPayloadCaster = (obj: any) => {
   return body
 }
 
-const getChoicesPayloadCaster = (obj: any) => {
-  const body = obj as { questionId: string }
-  if (body.questionId === undefined) {
-    throw TypeError(`${obj} cannot be cast to GetChoicesPayload`)
+const getUserInformationPayloadCaster = (obj: any) => {
+  const body = obj as { userId: string }
+  if (body.userId === undefined) {
+    throw TypeError(`${obj} cannot be cast to GetUserInformation`)
   }
   return body
 }
@@ -53,7 +53,7 @@ class App {
     this.app.use(cors())
 
     this.app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
+      console.log(`Home - ${req.ip}`)
       res.send("Zimzalabim!")
     })
 
@@ -66,6 +66,14 @@ class App {
           userId: uuid
         }
       }))
+    })
+
+    this.app.post("/get-user-information", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.log(req.ip)
+      const userId = getUserInformationPayloadCaster(req.body).userId
+      const information = this.dao.getUserInformation(userId)
+      const payload = information
+      res.send(JSON.stringify({ success: true, payload: payload }))
     })
 
     this.app.post("/get-qnas", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -95,7 +103,7 @@ class App {
     this.app.post("/submit-qnas", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(req.ip)
       const body = submitQNAPayloadCaster(req.body)
-      await this.dao.addUserInfo(body.userId, body.userName)
+      await this.dao.addUserInfomation(body.userId, body.userName)
       await Promise.all(body.qnas.map(qna => this.dao.addAnswer(body.userId, qna.questionId, qna.choiceId)))
       res.send(JSON.stringify({
         success: true
