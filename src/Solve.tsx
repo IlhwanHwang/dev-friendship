@@ -3,12 +3,14 @@ import { QNA } from '../common/QNA';
 import * as api from './api'
 import { Redirect } from 'react-router';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import * as queryString from 'query-string';
 
 export default class Solve extends React.Component<RouteComponentProps> {
   state = {
     page: "pre-load",
     qnaIndex: 0,
-    name: ""
+    name: "",
+    choice: null
   }
 
   userId = null
@@ -23,14 +25,16 @@ export default class Solve extends React.Component<RouteComponentProps> {
   }
 
   load = async () => {
-    this.sourceUserId = this.props.match.params['user_id']
+    const query = queryString.parse(this.props.location.search)
+    this.sourceUserId = query['user_id']
     const response1 = await api.postRequest("get-user-information", { userId: this.sourceUserId })
     if (!response1['success']) {
       this.setState({ page: "exception" })
       return
     }
+    console.log(response1)
     const userInformation = response1['payload']
-    this.sourceUserName = userInformation['user_name']
+    this.sourceUserName = userInformation['userName']
 
     this.setState({ page: "main" })
   }
@@ -83,29 +87,29 @@ export default class Solve extends React.Component<RouteComponentProps> {
   chooseAnswer = async (id: string) => {
     if (this.state.qnaIndex >= this.qnas.length) {
       this.setState({ page: "submit" })
-      const response1 = await api.postRequest("submit-qnas", {
-        userId: this.userId,
-        userName: this.state.name,
-        qnas: this.qnas.map(qna => { return { questionId: qna.question, choiceId: qna.answer }})
+      const response1 = await api.postRequest("submit-answers", {
+        sourceUserId: this.sourceUserId,
+        solverUserId: this.userId,
+        solverUserName: this.state.name,
+        answers: this.answers
       })
       if (!response1['success']) {
         this.setState({ page: "exception" })
         return
       }
-  
+
       this.setState({ page: "done" })
     }
     else {
-      this.qnas[this.state.qnaIndex].answer = id
-      this.setState({ qnaIndex: this.state.qnaIndex + 1 })
+      this.answers[this.state.qnaIndex] = id
+      this.setState({ page: "qnas-pause", choice: id })
+      await new Promise((resolve, reject) => setTimeout(() => { resolve() }, 1000)) 
+      this.setState({ page: "qnas", qnaIndex: this.state.qnaIndex + 1 })
     }
   }
 
   render = () => {
-    if (this.state.page === "exception") {
-      return <Redirect to="/exception"></Redirect>
-    }
-    else if (this.state.page === "pre-load") {
+    if (this.state.page === "pre-load") {
       return <div>정보 가져오는 중...</div>
     }
     else if (this.state.page === "main") {
@@ -127,14 +131,30 @@ export default class Solve extends React.Component<RouteComponentProps> {
         </form>
       )
     }
-    else if (this.state.page === "qnas") {
+    else if (this.state.page === "qnas" || this.state.page === "qnas-pause") {
       return (
         <div>
           <h1>{this.getCurrentQNA().question}</h1>
           {
             this.getCurrentQNA().choices.map(choice => {
+              const style = (() => {
+                if (this.state.page === "qnas-pause") {
+                  if (this.getCurrentQNA().answer === choice.id) {
+                    return { backgroundColor: "green" }
+                  }
+                  else if (this.state.choice === choice.id) {
+                    return { backgroundColor: "red" }
+                  }
+                  else {
+                    return {}
+                  }
+                }
+                else {
+                  return {}
+                }
+              })()
               return (
-                <button onClick={() => this.chooseAnswer(choice.id)}>
+                <button key={choice.id} style={style} onClick={() => this.chooseAnswer(choice.id)}>
                   {choice.text}
                 </button>
               )
@@ -144,7 +164,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
       );
     }
     else if (this.state.page === "submit") {
-      return <div>문답 등록하는 중...</div>
+      return <div>점수 매기는 중...</div>
     }
     else if (this.state.page === "done") {
       return (
@@ -153,6 +173,9 @@ export default class Solve extends React.Component<RouteComponentProps> {
           <Link to={`/solve/:${this.userId}`}></Link>
         </div>
       )
+    }
+    else {
+      return <Redirect to="/exception"></Redirect>
     }
   }
 }

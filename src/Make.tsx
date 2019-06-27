@@ -3,6 +3,7 @@ import { QNA } from '../common/QNA';
 import * as api from './api'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import * as Config from './Config'
 
 export default class Make extends React.Component {
   state = {
@@ -26,7 +27,7 @@ export default class Make extends React.Component {
       this.setState({ page: "exception" })
       return
     }
-    this.userId = response1['payload']
+    this.userId = response1['payload']['userId']
 
     const response2 = await api.postRequest("get-qnas", { userId: "" })
     if (!response2['success']) {
@@ -64,12 +65,12 @@ export default class Make extends React.Component {
   }
 
   chooseAnswer = async (id: string) => {
-    if (this.state.qnaIndex >= this.qnas.length) {
+    if (this.state.qnaIndex >= this.qnas.length - 1) {
       this.setState({ page: "submit" })
       const response1 = await api.postRequest("submit-qnas", {
         userId: this.userId,
         userName: this.state.name,
-        qnas: this.qnas.map(qna => { return { questionId: qna.question, choiceId: qna.answer }})
+        qnas: this.qnas.map(qna => { return { questionId: qna.id, choiceId: qna.answer }})
       })
       if (!response1['success']) {
         this.setState({ page: "exception" })
@@ -85,10 +86,7 @@ export default class Make extends React.Component {
   }
 
   render = () => {
-    if (this.state.page === "exception") {
-      return <Redirect to="/exception"></Redirect>
-    }
-    else if (this.state.page === "load") {
+    if (this.state.page === "load") {
       return <div>질문 받아오는 중...</div>
     }
     else if (this.state.page === "name") {
@@ -106,7 +104,7 @@ export default class Make extends React.Component {
           {
             this.getCurrentQNA().choices.map(choice => {
               return (
-                <button onClick={() => this.chooseAnswer(choice.id)}>
+                <button key={choice.id} onClick={() => this.chooseAnswer(choice.id)}>
                   {choice.text}
                 </button>
               )
@@ -122,9 +120,14 @@ export default class Make extends React.Component {
       return (
         <div>
           <div>완료! 친구들에게 링크를 공유하세요.</div>
-          <Link to={`/solve/:${this.userId}`}></Link>
+          <a href={`/solve/:${this.userId}`}>
+            {`${Config.HostName}/solve/?user_id=${this.userId}`}
+          </a>
         </div>
       )
+    }
+    else {
+      return <Redirect to="/exception"></Redirect>
     }
   }
 }

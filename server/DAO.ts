@@ -6,7 +6,7 @@ export class DAO {
 
   public static bootstrap = () => new DAO()
 
-  getNewQuestions = () => {
+  getNewQuestions = (num: number) => {
     return new Promise<{ question_id: string }[]>((resolve, reject) => {
       this.db.all(`
         SELECT
@@ -16,8 +16,8 @@ export class DAO {
         ORDER BY
           RANDOM()
         LIMIT
-          20
-      `, [], (err, rows) => {
+          ?
+      `, [num], (err, rows) => {
         if (err) {
           reject(err);
         }
@@ -63,7 +63,7 @@ export class DAO {
     })
   }
 
-  getQuestionInfo = (questionId: string) => {
+  getQuestionInformation = (questionId: string) => {
     return new Promise<{ contents: string }>((resolve, reject) => {
       this.db.all(`
         SELECT
@@ -118,7 +118,7 @@ export class DAO {
   }
 
   getUserInformation = (userId: string) => {
-    return new Promise<{ contents: string }>((resolve, reject) => {
+    return new Promise<{ userName: string }>((resolve, reject) => {
       this.db.all(`
         SELECT
           *
@@ -130,7 +130,10 @@ export class DAO {
         if (err) {
           reject(err);
         }
-        resolve(rows[0])
+        if (rows.length === 0) {
+          reject(Error(`No such user ${userId}`))
+        }
+        resolve({ userName: rows[0]['user_name'] })
       })
     })
   }
@@ -144,6 +147,25 @@ export class DAO {
             ?
           )
       `, [userId, userName], (err) => {
+        if (err) {
+          reject(err)
+        }
+        resolve()
+      })
+    })
+  }
+
+  addScore = (sourceUserId: string, solverUserId: string, score: number) => {
+    return new Promise((resolve, reject) => {
+      this.db.run(`
+        INSERT INTO user_information
+          VALUES (
+            ?,
+            ?,
+            ?,
+            ?
+          )
+      `, [sourceUserId, solverUserId, score, Date.now()], (err) => {
         if (err) {
           reject(err)
         }

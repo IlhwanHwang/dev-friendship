@@ -29,10 +29,10 @@ CREATE TABLE user_information (
 );
 
 CREATE TABLE score_board (
-    nonce VARCHAR NOT NULL PRIMARY KEY,
-    user_id VARCHAR NOT NULL,
-    user_name VARCHAR,
-    score INT
+    source_user_id VARCHAR NOT NULL,
+    solver_user_id VARCHAR NOT NULL PRIMARY KEY,
+    score INT,
+    created INT
 );
 
 INSERT INTO questions VALUES ("indent", "이 인덴트를 쓰는 방법은 무엇인가요?");

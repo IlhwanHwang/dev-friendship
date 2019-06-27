@@ -2,8 +2,8 @@ import * as request from 'request'
 
 export const ServerName = "http://localhost:3000"
 
-export const postRequest = (basename: string, body: any) => {
-  console.log(`Requesting ${basename} on ${body}`)
+export const postRequest = (basename: string, payload: any) => {
+  console.log(`Requesting ${basename} on ${payload}`)
   return new Promise((resolve, reject) => {
     request({
       uri: `${ServerName}/${basename}`,
@@ -11,15 +11,16 @@ export const postRequest = (basename: string, body: any) => {
       headers: {
         'X-PINGOTHER': 'pingpong'
       },
-      json: {
-        userId: ""
-      }
+      json: payload
     }, (err, response, body) => {
       if (err) {
         reject(err)
       }
       else if (response.statusCode === 200) {
         resolve(body)
+      }
+      else {
+        resolve({ success: false })
       }
     })
   }) 

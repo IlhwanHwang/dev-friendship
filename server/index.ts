@@ -18,10 +18,10 @@ const asyncWrapper = <T> (fun: (req: express.Request, res: express.Response, nex
 const submitQNAPayloadCaster = (obj: any) => {
   const body = obj as SubmitQNAPayload
   if (body.userId === undefined || body.userName === undefined || body.qnas === undefined) {
-    throw TypeError(`${obj} cannot be cast to SubmitQNAPayload`)
+    throw TypeError(`${JSON.stringify(obj)} cannot be cast to SubmitQNAPayload`)
   }
   if (body.qnas.filter(qna => qna.choiceId === undefined || qna.questionId === undefined).length > 0) {
-    throw TypeError(`${obj} cannot be cast to SubmitQNAPayload`)
+    throw TypeError(`${JSON.stringify(obj)} cannot be cast to SubmitQNAPayload`)
   }
   return body
 }
@@ -29,7 +29,7 @@ const submitQNAPayloadCaster = (obj: any) => {
 const getUserInformationPayloadCaster = (obj: any) => {
   const body = obj as { userId: string }
   if (body.userId === undefined) {
-    throw TypeError(`${obj} cannot be cast to GetUserInformation`)
+    throw TypeError(`${JSON.stringify(obj)} cannot be cast to GetUserInformation`)
   }
   return body
 }
@@ -37,7 +37,25 @@ const getUserInformationPayloadCaster = (obj: any) => {
 const getQNAPayloadCaster = (obj: any) => {
   const body = obj as { userId: string }
   if (body.userId === undefined) {
-    throw TypeError(`${obj} cannot be cast to GetQNAPayload`)
+    throw TypeError(`${JSON.stringify(obj)} cannot be cast to GetQNAPayload`)
+  }
+  return body
+}
+
+interface SubmitAnswersPayload {
+  sourceUserId: string,
+  solverUserId: string,
+  solverUserName: string,
+  answers: string[]
+}
+
+const submitAnswersPayloadCaster = (obj: any) => {
+  const body = obj as SubmitAnswersPayload
+  if (body.sourceUserId === undefined || body.solverUserId === undefined || body.solverUserName === undefined) {
+    throw TypeError(`${JSON.stringify(obj)} cannot be cast to SubmitAnswersPayload`)
+  }
+  if (body.answers.filter(answer => !answer).length > 0) {
+    throw TypeError(`${JSON.stringify(obj)} cannot be cast to SubmitAnswersPayload`)
   }
   return body
 }
@@ -57,12 +75,12 @@ class App {
     this.app.use(cors())
 
     this.app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(`Home - ${req.ip}`)
+      console.log(`home ${req.ip}`)
       res.send("Zimzalabim!")
     })
 
     this.app.post("/get-user-id", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
+      console.log(`get-user-id ${req.ip}`)
       const uuid = uuidv1()
       res.send(JSON.stringify({
         success: true,
@@ -73,21 +91,21 @@ class App {
     })
 
     this.app.post("/get-user-information", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
+      console.log(`get-user-information ${req.ip}`)
       const userId = getUserInformationPayloadCaster(req.body).userId
-      const information = this.dao.getUserInformation(userId)
+      const information = await this.dao.getUserInformation(userId)
       const payload = information
       res.send(JSON.stringify({ success: true, payload: payload }))
     }))
 
     this.app.post("/get-qnas", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
+      console.log(`get-qnas ${req.ip}`)
       const userId = getQNAPayloadCaster(req.body).userId
       const questions = userId !== "" ? 
         (await this.dao.getUserQuestions(userId)).map(row => row['question_id']) :
-        (await this.dao.getNewQuestions()).map(row => row['question_id'])
+        (await this.dao.getNewQuestions(3)).map(row => row['question_id'])
 
-      const questionInfos = await Promise.all(questions.map(questionId => this.dao.getQuestionInfo(questionId)))
+      const questionInfos = await Promise.all(questions.map(questionId => this.dao.getQuestionInformation(questionId)))
       const choices = await Promise.all(questions.map(questionId => this.dao.getChoices(questionId)))
 
       const answers = userId !== "" ? 
@@ -105,10 +123,23 @@ class App {
     }))
 
     this.app.post("/submit-qnas", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(req.ip)
+      console.log(`submit-qnas ${req.ip}`)
       const body = submitQNAPayloadCaster(req.body)
       await this.dao.addUserInfomation(body.userId, body.userName)
       await Promise.all(body.qnas.map(qna => this.dao.addAnswer(body.userId, qna.questionId, qna.choiceId)))
+      res.send(JSON.stringify({
+        success: true
+      }))
+    }))
+
+    this.app.post("/submit-answers", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.log(`submit-qnas ${req.ip}`)
+      const body = submitAnswersPayloadCaster(req.body)
+      await this.dao.addUserInfomation(body.solverUserId, body.solverUserName)
+      const questions = (await this.dao.getUserQuestions(body.sourceUserId)).map(row => row['question_id'])
+      const answers = (await Promise.all(questions.map(questionId => this.dao.getAnswer(body.sourceUserId, questionId)))).map(answer => answer.choice_id)
+      const score = _.zip(answers, body.answers).filter((pair) => pair[0] === pair[1]).length
+      await this.dao.addScore(body.sourceUserId, body.solverUserId, score)
       res.send(JSON.stringify({
         success: true
       }))
