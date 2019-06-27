@@ -120,6 +120,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
         <span>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</span>
         <button onClick={this.onStartSolve}>우정테스트 시작</button>
         <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
+        <Link to="/make">내 우정 테스트 만들기</Link>
       </div>
       )
     }

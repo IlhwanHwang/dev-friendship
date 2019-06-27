@@ -122,7 +122,7 @@ export default class Make extends React.Component {
       return (
         <div>
           <div>완료! 친구들에게 링크를 공유하세요.</div>
-          <a href={`/solve/:${this.userId}`}>
+          <a href={`/solve/?user_id=${this.userId}`}>
             {`${Config.HostName}/solve/?user_id=${this.userId}`}
           </a>
         </div>
