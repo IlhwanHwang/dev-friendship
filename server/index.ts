@@ -11,6 +11,10 @@ interface SubmitQNAPayload {
   qnas: { questionId: string, choiceId: string }[]
 }
 
+const asyncWrapper = <T> (fun: (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<T>) => 
+  async (req: express.Request, res: express.Response, next: express.NextFunction) =>
+  await fun(req, res, next).catch(next)
+
 const submitQNAPayloadCaster = (obj: any) => {
   const body = obj as SubmitQNAPayload
   if (body.userId === undefined || body.userName === undefined || body.qnas === undefined) {
@@ -68,15 +72,15 @@ class App {
       }))
     })
 
-    this.app.post("/get-user-information", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    this.app.post("/get-user-information", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(req.ip)
       const userId = getUserInformationPayloadCaster(req.body).userId
       const information = this.dao.getUserInformation(userId)
       const payload = information
       res.send(JSON.stringify({ success: true, payload: payload }))
-    })
+    }))
 
-    this.app.post("/get-qnas", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    this.app.post("/get-qnas", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(req.ip)
       const userId = getQNAPayloadCaster(req.body).userId
       const questions = userId !== "" ? 
@@ -98,9 +102,9 @@ class App {
           answer: answer!['choice_id']
         }})
       res.send(JSON.stringify({ success: true, payload: payload }))
-    })
+    }))
 
-    this.app.post("/submit-qnas", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    this.app.post("/submit-qnas", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(req.ip)
       const body = submitQNAPayloadCaster(req.body)
       await this.dao.addUserInfomation(body.userId, body.userName)
@@ -108,7 +112,7 @@ class App {
       res.send(JSON.stringify({
         success: true
       }))
-    })
+    }))
   }
 }
 

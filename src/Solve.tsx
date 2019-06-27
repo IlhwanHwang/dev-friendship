@@ -23,12 +23,14 @@ export default class Solve extends React.Component<RouteComponentProps> {
   }
 
   load = async () => {
-    const response1 = await api.postRequest("get-user-information", {})
+    this.sourceUserId = this.props.match.params['user_id']
+    const response1 = await api.postRequest("get-user-information", { userId: this.sourceUserId })
     if (!response1['success']) {
       this.setState({ page: "exception" })
       return
     }
-    this.userId = response1['payload']
+    const userInformation = response1['payload']
+    this.sourceUserName = userInformation['user_name']
 
     this.setState({ page: "main" })
   }
@@ -43,7 +45,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
     }
     this.userId = response1['payload']
 
-    const response2 = await api.postRequest("get-qnas", { userId: this.props.match.params['sourceUserId'] })
+    const response2 = await api.postRequest("get-qnas", { userId: this.sourceUserId })
     if (!response2['success']) {
       this.setState({ page: "exception" })
       return
@@ -109,7 +111,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
     else if (this.state.page === "main") {
       return (
       <div>
-        <span>{this.sourceUserName}의 개발자 우정테스트</span>
+        <span>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</span>
         <button onClick={this.onStartSolve}>우정테스트 시작</button>
       </div>
       )
