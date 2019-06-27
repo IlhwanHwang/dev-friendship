@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { QNA } from '../common/QNA'
 import * as api from './api'
-import { Redirect } from 'react-router';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import * as queryString from 'query-string';
-import ScoreBoard from './ScoreBoard';
+import { Redirect } from 'react-router'
+import { Link, RouteComponentProps } from 'react-router-dom'
+import * as queryString from 'query-string'
+import ScoreBoard from './ScoreBoard'
+import * as utils from './utils'
 
 export default class Solve extends React.Component<RouteComponentProps> {
   state = {
@@ -136,7 +137,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
     else if (this.state.page === "qnas" || this.state.page === "qnas-pause") {
       return (
         <div>
-          <h1>{this.getCurrentQNA().question}</h1>
+          <h1>{this.sourceUserName}{utils.alignPostposition(this.sourceUserName, this.getCurrentQNA().question)}</h1>
           {
             this.getCurrentQNA().choices.map(choice => {
               const style = (() => {

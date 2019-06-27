@@ -102,7 +102,7 @@ export default class Make extends React.Component {
     else if (this.state.page === "qnas") {
       return (
         <div>
-          <h1>{this.getCurrentQNA().question}</h1>
+          <h1>{this.state.name}{utils.alignPostposition(this.state.name, this.getCurrentQNA().question)}</h1>
           {
             this.getCurrentQNA().choices.map(choice => {
               return (
