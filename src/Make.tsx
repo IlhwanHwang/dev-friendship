@@ -15,7 +15,12 @@ export default class Make extends React.Component {
   qnas: QNA[] = []
   answers = []
 
-  mainOnClickMake = async () => {
+  constructor(props) {
+    super(props)
+    this.load()
+  }
+
+  load = async () => {
     const response1 = await api.postRequest("get-user-id", {})
     if (!response1['success']) {
       this.setState({ page: "exception" })
