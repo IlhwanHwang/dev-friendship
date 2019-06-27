@@ -98,4 +98,39 @@ export class DAO {
       })
     })
   }
+
+  addAnswer = (userId: string, questionId: string, answer: string) => {
+    return new Promise<{ choice_id: string }>((resolve, reject) => {
+      this.db.run(`
+        INSERT INTO answers
+          VALUES (
+            ?,
+            ?,
+            ?
+          )
+      `, [userId, questionId, answer], (err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve()
+      })
+    })
+  }
+
+  addUserInfo = (userId: string, userName: string) => {
+    return new Promise((resolve, reject) => {
+      this.db.run(`
+        INSERT INTO user_information
+          VALUES (
+            ?,
+            ?
+          )
+      `, [userId, userName], (err) => {
+        if (err) {
+          reject(err)
+        }
+        resolve()
+      })
+    })
+  }
 }
