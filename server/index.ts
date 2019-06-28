@@ -110,7 +110,7 @@ class App {
       const userId = getQNAPayloadCaster(req.body).userId
       const questions = userId !== "" ? 
         (await this.dao.getUserQuestions(userId)).map(row => row['question_id']) :
-        (await this.dao.getNewQuestions(3)).map(row => row['question_id'])
+        (await this.dao.getNewQuestions(10)).map(row => row['question_id'])
 
       const questionInfos = await Promise.all(questions.map(questionId => this.dao.getQuestionInformation(questionId)))
       const choices = await Promise.all(questions.map(questionId => this.dao.getChoices(questionId)))
@@ -168,7 +168,7 @@ class App {
   }
 }
 
-const port: number = Number(process.env.PORT) || 3000;
+const port: number = Number(process.env.PORT) || 37123;
 const app: express.Application = new App().app;
 
 app

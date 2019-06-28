@@ -1,1 +1,1 @@
-export const HostName = "http://irai.ml"
+export const HostName = "http://irai.iptime.org"

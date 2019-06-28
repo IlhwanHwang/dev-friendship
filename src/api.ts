@@ -1,6 +1,6 @@
 import * as request from 'request'
 
-export const ServerName = "http://localhost:3000"
+export const ServerName = "https://rwan.ml:37123"
 
 export const postRequest = (basename: string, payload: any) => {
   console.log(`Requesting ${basename} on ${JSON.stringify(payload)}`)
