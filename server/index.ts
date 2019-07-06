@@ -68,12 +68,12 @@ const getScoreBoardPayloadCaster = (obj: any) => {
   return body
 }
 
-class App {
+class Server {
   public app: express.Application
   public dao = DAO.bootstrap()
 
-  public static bootstrap(): App {
-    return new App()
+  public static bootstrap(): Server {
+    return new Server()
   }
 
   constructor() {
@@ -168,9 +168,43 @@ class App {
   }
 }
 
-const port: number = Number(process.env.PORT) || 37123;
-const app: express.Application = new App().app;
 
-app
-  .listen(port, () => console.log(`Express server listening at ${port}`))
-  .on('error', err => console.error(err));
+class Client {
+  public app: express.Application
+
+  public static bootstrap(): Client {
+    return new Client()
+  }
+
+  constructor() {
+    this.app = express()
+    this.app.use(express.json())
+    this.app.use(express.static('dist'))
+    this.app.use(cors())
+
+    this.app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.log(`home ${req.ip}`)
+      res.render('dist/index.html')
+    })
+  }
+}
+
+const appServer = new Server().app
+const portServer = 37123
+const appClient = new Client().app
+const portClient = 80
+
+if (process.argv.indexOf("--dev") >= 0) {
+  appServer
+    .listen(portServer, () => console.log(`Express server (server) listening at ${portServer}`))
+    .on('error', err => console.error(err));
+}
+else {
+  appServer
+    .listen(portServer, () => console.log(`Express server (server) listening at ${portServer}`))
+    .on('error', err => console.error(err));
+
+  appClient
+    .listen(portClient, () => console.log(`Express server (client) listening at ${portClient}`))
+    .on('error', err => console.error(err));
+}
