@@ -54,6 +54,8 @@ export class DAO {
           choices
         WHERE
           choices.question_id = ?
+        ORDER BY
+          choices.id
       `, [questionId], (err, rows) => {
         if (err) {
           reject(err);
