@@ -114,6 +114,7 @@ export default class Make extends React.Component {
                   text={choice.text}
                   imageUrl="/images/yeri-1.jpg"
                   onClick={() => this.chooseAnswer(choice.id)}
+                  portion={2}
                   key={choice.id}
                 />
               })
