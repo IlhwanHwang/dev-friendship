@@ -180,6 +180,7 @@ class Client {
     this.app = express()
     this.app.use(express.json())
     this.app.use(express.static('dist'))
+    this.app.use(express.static('static'))
     this.app.use(cors())
 
     this.app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {

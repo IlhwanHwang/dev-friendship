@@ -2,9 +2,9 @@ import * as React from 'react'
 import { QNA } from '../common/QNA'
 import * as api from './api'
 import { Redirect } from 'react-router'
-import { Link } from 'react-router-dom'
 import * as Config from './Config'
 import * as utils from './utils'
+import ChoiceCell from './ChoiceCell'
 
 export default class Make extends React.Component {
   state = {
@@ -102,16 +102,23 @@ export default class Make extends React.Component {
     else if (this.state.page === "qnas") {
       return (
         <div>
-          <h1>{this.state.name}{utils.alignPostposition(this.state.name, this.getCurrentQNA().question)}</h1>
-          {
-            this.getCurrentQNA().choices.map(choice => {
-              return (
-                <button key={choice.id} onClick={() => this.chooseAnswer(choice.id)}>
-                  {choice.text}
-                </button>
-              )
-            })
-          }
+          <div className="row">
+            <div className="col">
+              <h1>{this.state.name}{utils.alignPostposition(this.state.name, this.getCurrentQNA().question)}</h1>
+            </div>
+          </div>
+          <div className="row">
+            {
+              this.getCurrentQNA().choices.map(choice => {
+                return <ChoiceCell
+                  text={choice.text}
+                  imageUrl="/images/yeri-1.jpg"
+                  onClick={() => this.chooseAnswer(choice.id)}
+                  key={choice.id}
+                />
+              })
+            }
+          </div>
         </div>
       );
     }

@@ -21,6 +21,7 @@
     "@types/uuid": "^3.4.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "inspector": "^0.5.0",
     "lodash": "^4.17.11",
     "query-string": "^6.8.1",
     "react": "^16.8.6",

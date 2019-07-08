@@ -10,7 +10,7 @@ class App extends React.Component {
   render () {
     return (
       <BrowserRouter>
-        <div>
+        <div className="container">
           <Switch>
             <Route path="/exception" component={Exception}/>
             <Route path="/make" component={Make}/>
