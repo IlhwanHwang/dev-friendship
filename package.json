@@ -23,6 +23,7 @@
     "express": "^4.17.1",
     "inspector": "^0.5.0",
     "lodash": "^4.17.11",
+    "parcel-plugin-static-files-copy": "^2.1.2",
     "query-string": "^6.8.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
