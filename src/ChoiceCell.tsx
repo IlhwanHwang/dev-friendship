@@ -20,8 +20,8 @@ export default class ChoiceCell extends React.Component {
       <div
         className={`${column} d-flex justify-content-center align-items-end`}
         style={{
-          height: "8rem",
-          backgroundColor: "rgba(0, 0, 0, 1)"
+          height: "16rem",
+          backgroundColor: "black"
         }}
         onMouseOver={() => { this.setState({ entered: true }) }}
         onMouseOut={() => { this.setState({ entered: false }) }}
@@ -36,7 +36,13 @@ export default class ChoiceCell extends React.Component {
           }}
         >
         </div>
-        <span style={{ opacity: 1.0, zIndex: 1 }}>
+        <span
+          style={{
+            zIndex: 1,
+            textShadow: "0px 0px 5px black",
+            color: "white"
+          }}
+        >
           {this.props.text}
         </span>
         <div
