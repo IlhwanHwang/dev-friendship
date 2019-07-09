@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS choices;
 DROP TABLE IF EXISTS answers;
 DROP TABLE IF EXISTS user_information;
+DROP TABLE IF EXISTS score_board;
 
 CREATE TABLE questions (
     question_id VARCHAR NOT NULL PRIMARY KEY,
@@ -81,11 +82,11 @@ INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "else"
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "else", "same-line", "중괄호와 같은 줄에", "");
 
 INSERT INTO questions VALUES ("language", "이 선호하는 언어는 무엇인가요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "c", "C, C++", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "jvm", "Java, Scala, Kotlin", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "python", "Python", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "js", "Javascript, Typescript", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "etc", "기타", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "c", "C, C++", "/images/c-original.svg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "jvm", "Java, Scala, Kotlin", "/images/java-original.svg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "python", "Python", "/images/python-original.svg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "js", "Javascript, Typescript", "/images/javascript-original.svg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "etc", "기타", "/images/go-original.svg");
 
 INSERT INTO questions VALUES ("type", "이 선호하는 타입시스템은 무엇인가요?");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "type", "strong", "강한 타입 언어", "");
