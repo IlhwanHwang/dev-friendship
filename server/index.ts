@@ -123,7 +123,7 @@ class Server {
         .map(([questionId, questionInfo, choices, answer]) => { return {
           id: questionId!,
           question: questionInfo!['contents'],
-          choices: choices!.map(choice => { return { id: choice['choice_id'], text: choice['contents'] } }),
+          choices: choices!.map(choice => { return { id: choice['choice_id'], text: choice['contents'], imageUrl: choice['image_url'] } }),
           answer: answer!['choice_id']
         }})
       res.send(JSON.stringify({ success: true, payload: payload }))

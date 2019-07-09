@@ -6,7 +6,6 @@ import * as Config from './Config'
 import * as utils from './utils'
 import ChoiceCell from './ChoiceCell'
 import * as _ from 'lodash'
-import * as GeoPattern from 'geopattern'
 
 export default class Make extends React.Component {
   state = {
@@ -115,7 +114,7 @@ export default class Make extends React.Component {
               _.zip(this.getCurrentQNA().choices, portionPlan).map(([choice, portion]) => {
                 return <ChoiceCell
                   text={choice.text}
-                  imageUrl={choice.imageUrl || GeoPattern.generate(choice.text).toDataUrl()}
+                  imageUrl={choice.imageUrl}
                   onClick={() => this.chooseAnswer(choice.id)}
                   portion={portion}
                   cellStyle="normal"

@@ -45,11 +45,12 @@ export class DAO {
   }
 
   getChoices = (questionId: string) => {
-    return new Promise<{ choice_id: string, contents: string }[]>((resolve, reject) => {
+    return new Promise<{ choice_id: string, contents: string, image_url: string }[]>((resolve, reject) => {
       this.db.all(`
         SELECT
           choices.choice_id,
-          choices.contents
+          choices.contents,
+          choices.image_url
         FROM
           choices
         WHERE

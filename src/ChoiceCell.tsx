@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as GeoPattern from 'geopattern'
 
 export default class ChoiceCell extends React.Component {
   props: {
@@ -12,6 +13,13 @@ export default class ChoiceCell extends React.Component {
 
   state = {
     entered: false
+  }
+
+  imageFallback: string
+
+  constructor (props) {
+    super(props)
+    this.imageFallback = GeoPattern.generate(this.props.text).toDataUri()
   }
 
   render = () => {
@@ -31,21 +39,12 @@ export default class ChoiceCell extends React.Component {
           style={{ zIndex: 0, position: "absolute" }}
         >
           {
-            this.props.imageUrl.endsWith(".svg") ? (
-              <img
-                className="w-75 h-75"
-                src={this.props.imageUrl}
-                style={{ objectFit: "scale-down" }}
-              >
-              </img>
-            ) : (
-              <img
-                className="w-100 h-100"
-                src={this.props.imageUrl}
-                style={{ objectFit: "cover" }}
-              >
-              </img>
-            )
+            <img
+              className={ this.props.imageUrl.endsWith(".svg") ? "w-75 h-75" : "w-100 h-100" }
+              src={this.props.imageUrl || this.imageFallback}
+              style={{ objectFit: this.props.imageUrl.endsWith(".svg") ? "scale-down" : "cover" }}
+            >
+            </img>
           }
         </div>
         <div
@@ -61,7 +60,7 @@ export default class ChoiceCell extends React.Component {
           className="pl-2 pr-2"
           style={{
             zIndex: 2,
-            fontSize: "2rem",
+            fontSize: "1.5rem",
             textShadow: "0px 0px 5px black",
             textAlign: "center",
             color: "white",
