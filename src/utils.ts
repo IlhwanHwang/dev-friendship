@@ -23,3 +23,15 @@ export const alignPostposition = (subjective: string, sentence: string) => {
   })()
   return postposition + sentence.slice(1)
 }
+
+export const getPortionPlan = (length: number) => {
+  if (length % 3 === 0) {
+    return [...Array(length).fill(3)]
+  }
+  else if (length % 3 === 1) {
+    return [...Array(length - 4).fill(3), 2, 2, 2, 2]
+  }
+  else {
+    return [...Array(length - 2).fill(3), 2, 2]
+  }
+}

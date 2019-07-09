@@ -101,18 +101,7 @@ export default class Make extends React.Component {
       )
     }
     else if (this.state.page === "qnas") {
-      const portionPlan = (() => {
-        const length = this.getCurrentQNA().choices.length
-        if (length % 3 === 0) {
-          return [...Array(length).fill(3)]
-        }
-        else if (length % 3 === 1) {
-          return [...Array(length - 4).fill(3), 2, 2, 2, 2]
-        }
-        else {
-          return [...Array(length - 2).fill(3), 2, 2]
-        }
-      })()
+      const portionPlan = utils.getPortionPlan(this.getCurrentQNA().choices.length)
       return (
         <div>
           <div className="row">
@@ -129,6 +118,8 @@ export default class Make extends React.Component {
                   imageUrl="/images/yeri-1.jpg"
                   onClick={() => this.chooseAnswer(choice.id)}
                   portion={portion}
+                  cellStyle="normal"
+                  enable={true}
                   key={choice.id}
                 />
               })

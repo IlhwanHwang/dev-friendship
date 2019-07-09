@@ -6,6 +6,8 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import * as queryString from 'query-string'
 import ScoreBoard from './ScoreBoard'
 import * as utils from './utils'
+import * as _ from 'lodash'
+import ChoiceCell from './ChoiceCell';
 
 export default class Solve extends React.Component<RouteComponentProps> {
   state = {
@@ -136,34 +138,47 @@ export default class Solve extends React.Component<RouteComponentProps> {
       )
     }
     else if (this.state.page === "qnas" || this.state.page === "qnas-pause") {
+      const portionPlan = utils.getPortionPlan(this.getCurrentQNA().choices.length)
       return (
         <div>
-          <h1>{this.sourceUserName}{utils.alignPostposition(this.sourceUserName, this.getCurrentQNA().question)}</h1>
-          {
-            this.getCurrentQNA().choices.map(choice => {
-              const style = (() => {
-                if (this.state.page === "qnas-pause") {
-                  if (this.getCurrentQNA().answer === choice.id) {
-                    return { backgroundColor: "green" }
-                  }
-                  else if (this.state.choice === choice.id) {
-                    return { backgroundColor: "red" }
+          <div className="row">
+            <div className="col">
+              <h1>{this.sourceUserName}{utils.alignPostposition(this.sourceUserName, this.getCurrentQNA().question)}</h1>
+            </div>
+          </div>
+          <div className="row">
+            {
+              _.zip(this.getCurrentQNA().choices, portionPlan).map(([choice, portion]) => {
+                const style = (() => {
+                  if (this.state.page === "qnas-pause") {
+                    if (this.getCurrentQNA().answer === choice.id) {
+                      return "correct"
+                    }
+                    else if (this.state.choice === choice.id) {
+                      return "incorrect"
+                    }
+                    else {
+                      return "normal"
+                    }
                   }
                   else {
-                    return {}
+                    return "normal"
                   }
-                }
-                else {
-                  return {}
-                }
-              })()
-              return (
-                <button key={choice.id} style={style} onClick={() => this.chooseAnswer(choice.id)}>
-                  {choice.text}
-                </button>
-              )
-            })
-          }
+                })()
+                return (
+                  <ChoiceCell
+                    text={choice.text}
+                    imageUrl="/images/yeri-1.jpg"
+                    onClick={() => this.chooseAnswer(choice.id)}
+                    portion={portion}
+                    cellStyle={style}
+                    enable={this.state.page !== "qnas-pause"}
+                    key={choice.id}
+                  />
+                )
+              })
+            }
+          </div>
         </div>
       );
     }

@@ -5,7 +5,9 @@ export default class ChoiceCell extends React.Component {
     text: string,
     imageUrl: string,
     onClick: () => any,
-    portion: number
+    portion: number,
+    cellStyle: "normal" | "correct" | "incorrect",
+    enable: boolean
   }
 
   state = {
@@ -28,7 +30,7 @@ export default class ChoiceCell extends React.Component {
           className="w-100 h-100"
           style={{
             backgroundImage: `url("${this.props.imageUrl}")`,
-            opacity: this.state.entered ? 0.5 : 1.0,
+            opacity: this.props.enable && this.state.entered ? 0.5 : 1.0,
             backgroundSize: "cover",
             position: "absolute"
           }}
@@ -41,9 +43,19 @@ export default class ChoiceCell extends React.Component {
           className="w-100 h-100"
           style={{
             zIndex: 2,
+            position: "absolute",
+            backgroundColor: (this.props.cellStyle === "incorrect" ? "#f008" : (this.props.cellStyle === "correct" ? "#0f08" : ""))
+          }}
+        >
+        </div>
+        <div
+          className="w-100 h-100"
+          style={{
+            zIndex: 3,
             position: "absolute"
           }}
-          onClick={this.props.onClick}>
+          onClick={this.props.enable ? this.props.onClick : () => {}}
+        >
         </div>
       </div>
     )
