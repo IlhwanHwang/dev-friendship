@@ -16,7 +16,7 @@ export default class ChoiceCell extends React.Component {
     const column = `col-${Math.floor(12 / this.props.portion)}`
     return (
       <div
-        className="col-6 d-flex justify-content-center align-items-end"
+        className={`${column} d-flex justify-content-center align-items-end`}
         style={{
           height: "8rem",
           backgroundColor: "rgba(0, 0, 0, 1)"

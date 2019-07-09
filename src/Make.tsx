@@ -5,6 +5,7 @@ import { Redirect } from 'react-router'
 import * as Config from './Config'
 import * as utils from './utils'
 import ChoiceCell from './ChoiceCell'
+import * as _ from 'lodash'
 
 export default class Make extends React.Component {
   state = {
@@ -100,6 +101,18 @@ export default class Make extends React.Component {
       )
     }
     else if (this.state.page === "qnas") {
+      const portionPlan = (() => {
+        const length = this.getCurrentQNA().choices.length
+        if (length % 3 === 0) {
+          return [...Array(length).fill(3)]
+        }
+        else if (length % 3 === 1) {
+          return [...Array(length - 4).fill(3), 2, 2, 2, 2]
+        }
+        else {
+          return [...Array(length - 2).fill(3), 2, 2]
+        }
+      })()
       return (
         <div>
           <div className="row">
@@ -109,12 +122,13 @@ export default class Make extends React.Component {
           </div>
           <div className="row">
             {
-              this.getCurrentQNA().choices.map(choice => {
+              _.zip(this.getCurrentQNA().choices, portionPlan).map(([choice, portion]) => {
+                console.log(portion)
                 return <ChoiceCell
                   text={choice.text}
                   imageUrl="/images/yeri-1.jpg"
                   onClick={() => this.chooseAnswer(choice.id)}
-                  portion={2}
+                  portion={portion}
                   key={choice.id}
                 />
               })
