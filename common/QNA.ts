@@ -1,6 +1,7 @@
 export interface Choice {
   id: string;
-  text: string;
+  title: string;
+  subtitle: string;
   imageUrl: string;
 }
 

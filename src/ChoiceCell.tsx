@@ -3,7 +3,8 @@ import * as GeoPattern from 'geopattern'
 
 export default class ChoiceCell extends React.Component {
   props: {
-    text: string,
+    title: string,
+    subtitle: string,
     imageUrl: string,
     onClick: () => any,
     portion: number,
@@ -16,10 +17,12 @@ export default class ChoiceCell extends React.Component {
   }
 
   imageFallback: string
+  isMono: boolean
 
   constructor (props) {
     super(props)
-    this.imageFallback = GeoPattern.generate(this.props.text).toDataUri()
+    this.imageFallback = GeoPattern.generate(this.props.title).toDataUri()
+    this.isMono = this.props.imageUrl.length === 0 && this.props.title.match("^[_A-Za-z0-9 ]+$") !== null
   }
 
   render = () => {
@@ -32,16 +35,16 @@ export default class ChoiceCell extends React.Component {
       >
         <div
           className="w-100 h-100 pb-0 pl-3 pr-3 pt-3 d-flex"
-          style={{
-            height: "4rem",
-            backgroundColor: (this.props.cellStyle === "incorrect" ? "#f008" : (this.props.cellStyle === "correct" ? "#0f08" : "")),
-          }}
+          style={{ height: "4rem" }}
           onClick={this.props.enable ? this.props.onClick : () => {}}
         >
           <div
             className="flex-grow-1 d-flex"
             style={{
-              boxShadow: "0rem 0.125rem 0.5rem #0002"
+              boxShadow: "0rem 0.125rem 0.5rem #0002",
+              outlineColor: (this.props.cellStyle === "incorrect" ? "#f00" : (this.props.cellStyle === "correct" ? "#0f0" : "#fff0")),
+              outlineWidth: "3px",
+              outlineStyle: "solid"
             }}
           >
             <div
@@ -62,20 +65,26 @@ export default class ChoiceCell extends React.Component {
               }
             </div>
             <div
-              className="flex-grow-1"
+              className="flex-grow-1 pl-2 pt-1"
               style={{
                 backgroundColor: "#fff"
               }}
             >
               <span
-                className="pl-2 pr-2"
+                className="pl-2 pr-2 bg-dark text-white"
                 style={{
-                  zIndex: 2,
-                  fontSize: "1.5rem",
-                  fontFamily: this.props.imageUrl.length > 0 ? "inherit" : "monospace"
+                  fontSize: this.isMono ? "1.5rem" : "1.3rem",
+                  fontFamily: this.isMono ? "monospace" : "inherit",
+                  borderRadius: "0.5rem"
                 }}
               >
-                {this.props.text}
+                {this.props.title}
+              </span>
+              <br></br>
+              <span
+                className="text-secondary"
+              >
+                {this.props.subtitle}
               </span>
             </div>
           </div>

@@ -113,7 +113,8 @@ export default class Make extends React.Component {
             {
               _.zip(this.getCurrentQNA().choices, portionPlan).map(([choice, portion]) => {
                 return <ChoiceCell
-                  text={choice.text}
+                  title={choice.title}
+                  subtitle={choice.subtitle}
                   imageUrl={choice.imageUrl}
                   onClick={() => this.chooseAnswer(choice.id)}
                   portion={portion}

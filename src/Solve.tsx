@@ -167,7 +167,8 @@ export default class Solve extends React.Component<RouteComponentProps> {
                 })()
                 return (
                   <ChoiceCell
-                    text={choice.text}
+                    title={choice.title}
+                    subtitle={choice.subtitle}
                     imageUrl="/images/yeri-1.jpg"
                     onClick={() => this.chooseAnswer(choice.id)}
                     portion={portion}
