@@ -63,7 +63,7 @@ INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "worka
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "workaround", "identifier", "identifier", "차라리 다 쓰고 만다", "");
 
 INSERT INTO questions VALUES ("get-parameter", "은 '패러미터를 받아온다'를 의미하는 함수를 뭐라고 이름짓나요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "get-parameter", "camel", "getParameter", "카멜 케이스를", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "get-parameter", "camel", "getParameter", "카멜 케이스", "");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "get-parameter", "snake", "get_paremeter", "스네이크 케이스", "");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "get-parameter", "pascal", "GetParameter", "파스칼 케이스", "");
 
@@ -123,24 +123,24 @@ INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "cpu",
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "cpu", "amd", "암드", "리싸-쑤", "");
 
 INSERT INTO questions VALUES ("parts", "이 여유가 생기면 가장 먼저 구입할 부품은 무엇인가요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "display", "모니터/스피커", "", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "hui", "키보드/마우스", "", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "cpu", "CPU/RAM", "", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "gpu", "GPU", "", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "display", "모니터/스피커", "출력장치가 좋아야 눈도 귀도 호강", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "hui", "키보드/마우스", "레이턴시는 줄여야 제맛", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "cpu", "CPU/RAM", "컴퓨팅 파워가 메인이다", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "gpu", "GPU", "역시 대세는 그래픽이지", "");
 
 INSERT INTO questions VALUES ("dining", "은 밥을 어디서 먹나요?");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "dining", "dining-table", "식탁", "밥은 식탁에서", "/images/dining-table.jpg");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "dining", "computer-table", "컴퓨터 앞", "컴퓨터가 반찬이지", "/images/computer-table.jpg");
 
 INSERT INTO questions VALUES ("debug", "은 무엇으로 디버깅 하나요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug", "debug-tool", "디버그 툴", "", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug", "print", "프린트", "", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug", "no-need", "디버깅이 필요없다", "", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug", "debug-tool", "디버그 툴", "인간은 도구의 동물이다", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug", "print", "프린트", "도구 없이 할 수 있으면 베스트 아닌가", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug", "no-need", "디버깅이 필요없다", "그런거 왜 함?", "");
 
 INSERT INTO questions VALUES ("real-environment", "은 어디서 코딩하는걸 선호하나요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "home", "집", "", "/images/home.jpg");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "office", "회사", "", "/images/office.jpg");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "cafe", "카페", "", "/images/cafe.jpg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "home", "집", "역시 집이 좋아", "/images/home.jpg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "office", "회사", "코딩 제일 많이 하는 곳이잖아", "/images/office.jpg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "cafe", "카페", "커피냄새를 맡으며", "/images/cafe.jpg");
 
 INSERT INTO questions VALUES ("time", "은 언제 코딩하는걸 선호하나요?");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "time", "day", "낮", "날이 밝아야 머리도 맑은 법", "/images/day.jpg");
