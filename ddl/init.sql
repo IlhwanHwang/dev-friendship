@@ -152,8 +152,8 @@ INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "parts", "drive", "저장장치", "");
 
 INSERT INTO questions VALUES ("dining", "은 밥을 어디서 먹나요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "dining", "dining-table", "식탁", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "dining", "computer-table", "컴퓨터 앞", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "dining", "dining-table", "식탁", "/images/dining-table.jpg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "dining", "computer-table", "컴퓨터 앞", "/images/computer-table.jpg");
 
 INSERT INTO questions VALUES ("debug", "은 무엇으로 디버깅 하나요?");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug", "debug-tool", "디버그 툴", "");
@@ -161,10 +161,10 @@ INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "debug", "no-need", "디버깅이 필요없다", "");
 
 INSERT INTO questions VALUES ("real-environment", "은 어디서 코딩하는걸 선호하나요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "home", "집", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "office", "회사", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "cafe", "카페", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "home", "집", "/images/home.jpg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "office", "회사", "/images/office.jpg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "real-environment", "cafe", "카페", "/images/cafe.jpg");
 
 INSERT INTO questions VALUES ("time", "은 언제 코딩하는걸 선호하나요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "time", "day", "낮", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "time", "night", "밤", "");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "time", "day", "낮", "/images/day.jpg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "time", "night", "밤", "/images/night.jpg");
