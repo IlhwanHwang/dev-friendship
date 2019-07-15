@@ -37,12 +37,14 @@ class WalletDisplay extends React.Component {
         }}>
           {this.state.copied ? "복사되었습니다" : this.props.name}
         </span>
+        <br></br>
         <img
           className="mt-3"
           src={this.props.qrImg}
           style={{
             width: "100%",
-            objectFit: "contain"
+            objectFit: "contain",
+            maxWidth: "200px"
           }}
           onClick={() => {
             const copyText = document.getElementById(this.walletElemId) as HTMLInputElement
@@ -190,9 +192,9 @@ export default class Solve extends React.Component<RouteComponentProps> {
           </div>
         </div>
         {
-          this.userId !== null ? (
+          this.userId === null ? (
             <div className="row">
-              <div className="col-12 text-center mb-3">
+              <div className="col-12 text-center mt-4 mb-3">
                 재밌으셨나요? 커피 한 잔 사주시는건 어때요? 😉
                 <span className="text-secondary" style={{
                   fontSize: "0.75rem"
