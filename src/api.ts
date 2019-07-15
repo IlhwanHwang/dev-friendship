@@ -1,6 +1,6 @@
 import * as request from 'request'
 
-export const ServerName = location.host == "localhost:1234" ? "http://localhost:37123" : "https://rwan.ml:37123"
+export const ServerName = location.host == "localhost:1234" ? "http://localhost:37123" : "http://rwan.ml:37123"
 
 export const postRequest = (basename: string, payload: any) => {
   console.log(`Requesting ${basename} on ${JSON.stringify(payload)}`)

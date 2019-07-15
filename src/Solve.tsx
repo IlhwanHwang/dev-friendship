@@ -9,6 +9,66 @@ import * as utils from './utils'
 import * as _ from 'lodash'
 import ChoiceCell from './ChoiceCell';
 
+
+class WalletDisplay extends React.Component {
+  props: {
+    type: string,
+    address: string,
+    name: string,
+    qrImg: string
+  }
+
+  state = {
+    copied: false
+  }
+
+  walletElemId: string
+
+  constructor(props) {
+    super(props)
+    this.walletElemId = `wallet-address-${this.props.type}`
+  }
+
+  render = () => {
+    return (
+      <div>
+        <span className="bg-secondary text-white pl-2 pr-2 pt-1 pb-1 mb-4" style={{
+          borderRadius: "0.25rem"
+        }}>
+          {this.state.copied ? "복사되었습니다" : this.props.name}
+        </span>
+        <img
+          className="mt-3"
+          src={this.props.qrImg}
+          style={{
+            width: "100%",
+            objectFit: "contain"
+          }}
+          onClick={() => {
+            const copyText = document.getElementById(this.walletElemId) as HTMLInputElement
+            copyText.select()
+            document.execCommand("copy")
+            this.setState({ copied: true })
+            setTimeout(() => { this.setState({ copied: false }) }, 1000)
+          }}
+        ></img>
+        <input
+          type="text"
+          value={this.props.address}
+          id={this.walletElemId}
+          style={{
+            position: "absolute",
+            left: "-1000px",
+            top:  "-1000px"
+          }}
+        >
+        </input>
+      </div>
+    )
+  }
+}
+
+
 export default class Solve extends React.Component<RouteComponentProps> {
   state = {
     page: "pre-load",
@@ -119,7 +179,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
     else if (this.state.page === "main") {
       return (
       <div className="row h-100 d-flex align-items-center overflow-auto">
-        <div className="col text-center mt-5 mb-5">
+        <div className="col text-center mt-5">
           <div>
             <h2>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</h2>
             <br></br>
@@ -129,6 +189,38 @@ export default class Solve extends React.Component<RouteComponentProps> {
             <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
           </div>
         </div>
+        {
+          this.userId === null ? (
+            <div className="row">
+              <div className="col-12 text-center mb-3">
+                재밌으셨나요? 커피 한 잔 사주시는건 어때요? 😉
+                <span className="text-secondary" style={{
+                  fontSize: "0.75rem"
+                }}>
+                  클릭하면 지갑 주소가 복사됩니다
+                </span>
+              </div>
+              <div className="col-6 text-center pl-5 mb-5">
+                <WalletDisplay
+                  name="BTC"
+                  address="1ETCiZLYqa9YmsM6RUZfgUhX9JQyxAZyg1"
+                  type="BTC"
+                  qrImg="/images/wallet-btc.png"
+                />
+              </div>
+              <div className="col-6 text-center pr-5 mb-5">
+                <WalletDisplay
+                  name="ETH"
+                  address="0xad84971041689932519167bA1C34f06209C3eb98"
+                  type="ETH"
+                  qrImg="/images/wallet-eth.png"
+                />
+              </div>
+            </div>
+          ) : (
+            <div></div>
+          )
+        }
       </div>
       )
     }
