@@ -190,7 +190,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
           </div>
         </div>
         {
-          this.userId === null ? (
+          this.userId !== null ? (
             <div className="row">
               <div className="col-12 text-center mb-3">
                 재밌으셨나요? 커피 한 잔 사주시는건 어때요? 😉

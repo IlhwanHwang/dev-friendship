@@ -39,7 +39,7 @@ export default class ChoiceCell extends React.Component {
           onClick={this.props.enable ? this.props.onClick : () => {}}
         >
           <div
-            className="flex-grow-1 d-flex"
+            className="flex-grow-1 d-flex overflow-hidden"
             style={{
               boxShadow: "0rem 0.125rem 0.5rem #0002",
               outlineColor: (this.props.cellStyle === "incorrect" ? "#f00" : (this.props.cellStyle === "correct" ? "#0f0" : "#fff0")),
@@ -65,7 +65,7 @@ export default class ChoiceCell extends React.Component {
               }
             </div>
             <div
-              className="flex-grow-1 pl-2 pt-1"
+              className="flex-grow-1 pl-2 pt-1 overflow-hidden"
               style={{
                 backgroundColor: "#fff"
               }}
@@ -84,7 +84,9 @@ export default class ChoiceCell extends React.Component {
               <span
                 className="text-secondary"
                 style={{
-                  textOverflow: "ellipsis"
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap"
                 }}
               >
                 {this.props.subtitle}
