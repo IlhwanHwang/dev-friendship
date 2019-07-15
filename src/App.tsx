@@ -18,6 +18,29 @@ class App extends React.Component {
             <Route path="/" component={Home}/>
           </Switch>
         </div>
+        <div
+          className="text-center w-100 text-secondary"
+          style={{
+            position: "fixed",
+            bottom: "0"
+          }}
+        >
+          <p
+            style={{
+              fontSize: "0.4rem"
+            }}
+          >
+            <span
+              className="bg-light p-1"
+              style={{
+                borderRadius: "0.25rem",
+                boxShadow: "0px "
+              }}
+            >
+              Ilhwan Hwang 2019
+            </span>
+          </p>
+        </div>
       </BrowserRouter>
     )
   }

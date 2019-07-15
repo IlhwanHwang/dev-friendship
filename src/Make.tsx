@@ -91,28 +91,24 @@ export default class Make extends React.Component {
   render = () => {
     if (this.state.page === "load") {
       return (
-        <div>
-          <div className="row">
-            <div className="col text-center">
-              <div>질문 받아오는 중...</div>
-            </div>
+        <div className="row h-100 d-flex align-items-center">
+          <div className="col text-center">
+            <div>질문 받아오는 중...</div>
           </div>
         </div>
       )
     }
     else if (this.state.page === "name") {
       return (
-        <div>
-          <div className="row">
-            <div className="col text-center">
-              <h2>
-                이름을 입력하세요
-              </h2>
-              <form>
-                <input name='' onChange={this.onChangeName}></input>
-                <input type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
-              </form>
-            </div>
+        <div className="row h-100 d-flex align-items-center">
+          <div className="col text-center">
+            <h2>
+              이름을 입력하세요
+            </h2>
+            <form>
+              <input name='' onChange={this.onChangeName}></input>
+              <input className="btn btn-primary" type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
+            </form>
           </div>
         </div>
       )
@@ -121,9 +117,9 @@ export default class Make extends React.Component {
       const portionPlan = utils.getPortionPlan(this.getCurrentQNA().choices.length)
       return (
         <div>
-          <div className="row">
+          <div className="row pt-4">
             <div className="col">
-              <h1>{this.state.name}{utils.alignPostposition(this.state.name, this.getCurrentQNA().question)}</h1>
+              <h2>{this.state.name}{utils.alignPostposition(this.state.name, this.getCurrentQNA().question)}</h2>
             </div>
           </div>
           <div className="row">
@@ -150,13 +146,22 @@ export default class Make extends React.Component {
     }
     else if (this.state.page === "done") {
       return (
-        <div className="row">
+        <div className="row h-100 d-flex align-items-center">
           <div className="col text-center">
             <div>
-              <div>완료! 친구들에게 링크를 공유하세요.</div>
-              <a href={`/solve/?user_id=${this.userId}`}>
-                {`${Config.HostName}/solve/?user_id=${this.userId}`}
-              </a>
+              <h2>완료!</h2>
+              <p>친구들에게 링크를 공유하세요.</p>
+              <div
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: "0.25rem",
+                  border: "1px solid #f0f2f4"
+                }}
+              >
+                <a href={`/solve/?user_id=${this.userId}`}>
+                  {`${Config.HostName}/solve/?user_id=${this.userId}`}
+                </a>
+              </div>
             </div>
           </div>
         </div>

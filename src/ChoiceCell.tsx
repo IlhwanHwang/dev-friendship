@@ -83,6 +83,9 @@ export default class ChoiceCell extends React.Component {
               <br></br>
               <span
                 className="text-secondary"
+                style={{
+                  textOverflow: "ellipsis"
+                }}
               >
                 {this.props.subtitle}
               </span>

@@ -118,14 +118,14 @@ export default class Solve extends React.Component<RouteComponentProps> {
     }
     else if (this.state.page === "main") {
       return (
-      <div className="row">
+      <div className="row h-100 d-flex align-items-center">
         <div className="col text-center">
           <div>
-            <span>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</span>
+            <h2>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</h2>
             <br></br>
-            <button onClick={this.onStartSolve}>우정테스트 시작</button>
+            <button className="btn btn-primary" onClick={this.onStartSolve}>우정테스트 시작</button>
             <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
-            <Link to="/make">내 우정 테스트 만들기</Link>
+            <Link className="btn btn-dark mt-3" to="/make">내 우정 테스트 만들기</Link>
           </div>
         </div>
       </div>
@@ -142,11 +142,14 @@ export default class Solve extends React.Component<RouteComponentProps> {
     }
     else if (this.state.page === "name") {
       return (
-        <div className="row">
-          <div className="col text-center">
+        <div className="row h-100 d-flex align-items-center">
+          <div className="col text-center pt-5 pb-5">
+            <h2>
+              이름을 입력하세요
+            </h2>
             <form>
               <input name='' onChange={this.onChangeName}></input>
-              <input type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
+              <input className="btn btn-primary" type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
             </form>
           </div>
         </div>
@@ -156,7 +159,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
       const portionPlan = utils.getPortionPlan(this.getCurrentQNA().choices.length)
       return (
         <div>
-          <div className="row">
+          <div className="row pt-4">
             <div className="col">
               <h1>{this.sourceUserName}{utils.alignPostposition(this.sourceUserName, this.getCurrentQNA().question)}</h1>
             </div>
@@ -184,7 +187,7 @@ export default class Solve extends React.Component<RouteComponentProps> {
                   <ChoiceCell
                     title={choice.title}
                     subtitle={choice.subtitle}
-                    imageUrl="/images/yeri-1.jpg"
+                    imageUrl={choice.imageUrl}
                     onClick={() => this.chooseAnswer(choice.id)}
                     portion={portion}
                     cellStyle={style}
