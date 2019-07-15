@@ -34,7 +34,7 @@ export default class ChoiceCell extends React.Component {
         onMouseOut={() => { this.setState({ entered: false }) }}
       >
         <div
-          className="w-100 h-100 pb-0 pl-3 pr-3 pt-3 d-flex"
+          className="w-100 h-100 pb-0 pl-3 pr-3 pt-2 pb-2 d-flex"
           style={{ height: "4rem" }}
           onClick={this.props.enable ? this.props.onClick : () => {}}
         >

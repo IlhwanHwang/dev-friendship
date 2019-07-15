@@ -118,14 +118,15 @@ export default class Solve extends React.Component<RouteComponentProps> {
     }
     else if (this.state.page === "main") {
       return (
-      <div className="row h-100 d-flex align-items-center">
-        <div className="col text-center">
+      <div className="row h-100 d-flex align-items-center overflow-auto">
+        <div className="col text-center mt-5 mb-5">
           <div>
             <h2>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</h2>
             <br></br>
             <button className="btn btn-primary" onClick={this.onStartSolve}>우정테스트 시작</button>
-            <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
+            <br></br>
             <Link className="btn btn-dark mt-3" to="/make">내 우정 테스트 만들기</Link>
+            <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
           </div>
         </div>
       </div>
@@ -148,8 +149,9 @@ export default class Solve extends React.Component<RouteComponentProps> {
               이름을 입력하세요
             </h2>
             <form>
-              <input name='' onChange={this.onChangeName}></input>
-              <input className="btn btn-primary" type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
+              <input style={{ fontSize: "1.3rem" }}name='' onChange={this.onChangeName}></input>
+              <br></br>
+              <input className="btn btn-primary mt-2" type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
             </form>
           </div>
         </div>
@@ -162,6 +164,21 @@ export default class Solve extends React.Component<RouteComponentProps> {
           <div className="row pt-4">
             <div className="col">
               <h1>{this.sourceUserName}{utils.alignPostposition(this.sourceUserName, this.getCurrentQNA().question)}</h1>
+            </div>
+          </div>
+          <div className="row">
+            <div
+              className="col text-center text-secondary"
+              style={{
+                fontSize: "0.5rem",
+                letterSpacing: "0.5rem"
+              }}
+            >
+            {
+              this.qnas.map((qna, index) => {
+                return <span>{index > this.state.qnaIndex ? "○" : "●"}</span>
+              })
+            }
             </div>
           </div>
           <div className="row">

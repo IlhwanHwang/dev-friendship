@@ -49,7 +49,6 @@ INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "index
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "index", "index", "index", "줄이면 헷갈리니까", "");
 
 INSERT INTO questions VALUES ("temporary", "은 '임시변수'를 의미하는 변수를 뭐라고 이름짓나요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "temporary", "temporary_variable", "temporary_variable", "줄이면 헷갈리니까", "");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "temporary", "temp", "temp", "다들 이렇게 쓰지 않나?", "");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "temporary", "tmp", "tmp", "모음은 생략해도 돼", "");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "temporary", "t", "t", "대충 알지 않겠어?", "");
@@ -66,13 +65,6 @@ INSERT INTO questions VALUES ("get-parameter", "은 '패러미터를 받아온�
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "get-parameter", "camel", "getParameter", "카멜 케이스", "");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "get-parameter", "snake", "get_paremeter", "스네이크 케이스", "");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "get-parameter", "pascal", "GetParameter", "파스칼 케이스", "");
-
-INSERT INTO questions VALUES ("http-manager", "은 'HTTP 연결을 관리하는 클래스'를 뭐라고 이름짓나요?");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "http-manager", "camel-upper", "HTTPManager", "HTTP는 줄임말이니까", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "http-manager", "camel-title", "HttpManager", "아무리 줄임말이어도 보기 안 좋으니까", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "http-manager", "camel-lower", "httpManager", "클래스도 카멜케이스로", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "http-manager", "snake-upper", "HTTP_manager", "HTTP는 줄임말이고 스네이크 케이스도 쓰고싶어", "");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "http-manager", "snake-lower", "http_manager", "스네이크 케이스를 엄격히 지키자", "");
 
 INSERT INTO questions VALUES ("brace", "은 어디에 중괄호를 쓰나요?");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "brace", "same", "함수 선언 줄에", "한 줄 쓰기엔 좀 아까워", "");

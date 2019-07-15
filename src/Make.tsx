@@ -106,8 +106,9 @@ export default class Make extends React.Component {
               이름을 입력하세요
             </h2>
             <form>
-              <input name='' onChange={this.onChangeName}></input>
-              <input className="btn btn-primary" type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
+              <input style={{ fontSize: "1.3rem" }} name='' onChange={this.onChangeName}></input>
+              <br></br>
+              <input className="btn btn-primary mt-2" type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
             </form>
           </div>
         </div>
@@ -120,6 +121,21 @@ export default class Make extends React.Component {
           <div className="row pt-4">
             <div className="col">
               <h2>{this.state.name}{utils.alignPostposition(this.state.name, this.getCurrentQNA().question)}</h2>
+            </div>
+          </div>
+          <div className="row">
+            <div
+              className="col text-center text-secondary"
+              style={{
+                fontSize: "0.5rem",
+                letterSpacing: "0.5rem"
+              }}
+            >
+            {
+              this.qnas.map((qna, index) => {
+                return <span>{index > this.state.qnaIndex ? "○" : "●"}</span>
+              })
+            }
             </div>
           </div>
           <div className="row">
