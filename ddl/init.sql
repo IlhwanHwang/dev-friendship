@@ -87,7 +87,7 @@ INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "langu
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "jvm", "Java, Scala, Kotlin", "라이브러리도 많고 속도도 적당하지", "/images/java-original.svg");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "python", "Python", "분석에 이만한게 없지", "/images/python-original.svg");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "js", "Javascript, Typescript", "이만큼 호환성 좋은 언어 있어?", "/images/javascript-original.svg");
-INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "etc", "기타", "나는 변태다", "/images/go-original.svg");
+INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "language", "etc", "기타", "나는 변태다", "/images/haskell-original.svg");
 
 INSERT INTO questions VALUES ("type", "이 선호하는 타입시스템은 무엇인가요?");
 INSERT INTO choices VALUES ((SELECT IFNULL(MAX(id), 0) + 1 FROM choices), "type", "strong", "강한 타입 언어", "타입시스템은 우월하다", "");

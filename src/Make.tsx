@@ -90,14 +90,31 @@ export default class Make extends React.Component {
 
   render = () => {
     if (this.state.page === "load") {
-      return <div>질문 받아오는 중...</div>
+      return (
+        <div>
+          <div className="row">
+            <div className="col text-center">
+              <div>질문 받아오는 중...</div>
+            </div>
+          </div>
+        </div>
+      )
     }
     else if (this.state.page === "name") {
       return (
-        <form>
-          <input name='' onChange={this.onChangeName}></input>
-          <input type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
-        </form>
+        <div>
+          <div className="row">
+            <div className="col text-center">
+              <h2>
+                이름을 입력하세요
+              </h2>
+              <form>
+                <input name='' onChange={this.onChangeName}></input>
+                <input type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
+              </form>
+            </div>
+          </div>
+        </div>
       )
     }
     else if (this.state.page === "qnas") {
@@ -133,11 +150,15 @@ export default class Make extends React.Component {
     }
     else if (this.state.page === "done") {
       return (
-        <div>
-          <div>완료! 친구들에게 링크를 공유하세요.</div>
-          <a href={`/solve/?user_id=${this.userId}`}>
-            {`${Config.HostName}/solve/?user_id=${this.userId}`}
-          </a>
+        <div className="row">
+          <div className="col text-center">
+            <div>
+              <div>완료! 친구들에게 링크를 공유하세요.</div>
+              <a href={`/solve/?user_id=${this.userId}`}>
+                {`${Config.HostName}/solve/?user_id=${this.userId}`}
+              </a>
+            </div>
+          </div>
         </div>
       )
     }

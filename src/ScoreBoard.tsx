@@ -11,7 +11,7 @@ class ScoreBoardElem extends React.Component {
 
   render = () => {
     return (
-      <div className="col-12 p-0">
+      <div className="col-12 p-0 text-left">
         <div
           className="w-100 h-100 pb-0 pl-3 pr-3 pt-3 d-flex"
           style={{ height: "4rem" }}

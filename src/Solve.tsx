@@ -118,23 +118,38 @@ export default class Solve extends React.Component<RouteComponentProps> {
     }
     else if (this.state.page === "main") {
       return (
-      <div>
-        <span>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</span>
-        <button onClick={this.onStartSolve}>우정테스트 시작</button>
-        <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
-        <Link to="/make">내 우정 테스트 만들기</Link>
+      <div className="row">
+        <div className="col text-center">
+          <div>
+            <span>{this.sourceUserName}의 개발자 우정테스트를 풀어보세요</span>
+            <br></br>
+            <button onClick={this.onStartSolve}>우정테스트 시작</button>
+            <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
+            <Link to="/make">내 우정 테스트 만들기</Link>
+          </div>
+        </div>
       </div>
       )
     }
     else if (this.state.page === "load") {
-      return <div>질문 받아오는 중...</div>
+      return (
+        <div className="row">
+          <div className="col text-center">
+            <div>질문 받아오는 중...</div>
+          </div>
+        </div>
+      )
     }
     else if (this.state.page === "name") {
       return (
-        <form>
-          <input name='' onChange={this.onChangeName}></input>
-          <input type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
-        </form>
+        <div className="row">
+          <div className="col text-center">
+            <form>
+              <input name='' onChange={this.onChangeName}></input>
+              <input type='submit' disabled={!this.checkName(this.state.name)} onClick={this.onSubmitName}></input>
+            </form>
+          </div>
+        </div>
       )
     }
     else if (this.state.page === "qnas" || this.state.page === "qnas-pause") {
