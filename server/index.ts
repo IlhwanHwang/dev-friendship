@@ -4,6 +4,7 @@ import * as uuidv1 from "uuid/v1"
 import {DAO} from "./DAO"
 import * as _ from "lodash"
 import {QNA} from "../common/QNA"
+import * as ejs from "ejs"
 
 interface SubmitQNAPayload {
   userId: string,
@@ -178,13 +179,14 @@ class Client {
 
   constructor() {
     this.app = express()
-    this.app.use(express.json())
     this.app.use(express.static('dist'))
-    this.app.use(cors())
+    this.app.set('views', 'dist')
+    this.app.engine('html', (path, options, cb) => ejs.renderFile(path, cb));
+    this.app.set('view engine', 'html')
 
-    this.app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    this.app.get("/*", (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`home ${req.ip}`)
-      res.render('dist/index.html')
+      res.render('index.html')
     })
   }
 }
