@@ -184,9 +184,15 @@ class Client {
     this.app.engine('html', (path, options, cb) => ejs.renderFile(path, cb));
     this.app.set('view engine', 'html')
 
-    this.app.get("/*", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      console.log(`home ${req.ip}`)
-      res.render('index.html')
+    this.app.get("/*", (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      if (err) {
+        console.log(err)
+        res.redirect("/exception")
+      }
+      else {
+        console.log(`home ${req.ip}`)
+        res.render('index.html')
+      }
     })
   }
 }
