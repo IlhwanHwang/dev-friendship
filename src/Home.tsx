@@ -6,16 +6,25 @@ export default class Home extends React.Component {
     return (
       <div
         className="row h-100 d-flex align-items-center"
-        style={{
-          backgroundImage: "url('/images/bg-programming.jpg')",
-          backgroundSize: "cover"
-        }}
       >
         <div
           className="w-100 h-100"
           style={{
+            backgroundImage: "url('/images/bg-programming.jpg')",
+            backgroundSize: "cover",
+            position: "absolute",
+            top: "0",
+            left: "0"
+          }}
+        >
+        </div>
+        <div
+          className="w-100 h-100"
+          style={{
             backgroundColor: "#343a40a0",
-            position: "absolute"
+            position: "absolute",
+            top: "0",
+            left: "0"
           }}
         >
         </div>

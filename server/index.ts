@@ -5,6 +5,9 @@ import {DAO} from "./DAO"
 import * as _ from "lodash"
 import {QNA} from "../common/QNA"
 import * as ejs from "ejs"
+import * as fs from "fs"
+
+const serverLogOutput = "server.log"
 
 interface SubmitQNAPayload {
   userId: string,
@@ -61,6 +64,23 @@ const submitAnswersPayloadCaster = (obj: any) => {
   return body
 }
 
+const logRequest = async (type: string, req: express.Request) => {
+  const data = {
+    type: type,
+    timestamp: Date.now(),
+    ip: req.ip,
+    header: req.header,
+    body: req.body,
+    rawHeaders: req.rawHeaders,
+    rawTrailers: req.rawTrailers,
+    cookies: req.cookies
+  }
+  await new Promise(
+    (resolve, reject) => fs.appendFile(serverLogOutput, JSON.stringify(data) + "\n",
+    (err) => { if (err) { reject(err)} else { resolve() } })
+  )
+}
+
 const getScoreBoardPayloadCaster = (obj: any) => {
   const body = obj as { userId: string }
   if (body.userId === undefined) {
@@ -82,13 +102,17 @@ class Server {
     this.app.use(express.json())
     this.app.use(cors())
 
-    this.app.get("/", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    this.app.get("/",  asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`home ${req.ip}`)
+      console.log(JSON.stringify(req.body))
+      await logRequest("home", req)
       res.send("Zimzalabim!")
-    })
+    }))
 
-    this.app.post("/get-user-id", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    this.app.post("/get-user-id", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`get-user-id ${req.ip}`)
+      console.log(JSON.stringify(req.body))
+      await logRequest("get-user-id", req)
       const uuid = uuidv1()
       res.send(JSON.stringify({
         success: true,
@@ -96,10 +120,12 @@ class Server {
           userId: uuid
         }
       }))
-    })
+    }))
 
     this.app.post("/get-user-information", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`get-user-information ${req.ip}`)
+      console.log(JSON.stringify(req.body))
+      await logRequest("get-user-information", req)
       const userId = getUserInformationPayloadCaster(req.body).userId
       const information = await this.dao.getUserInformation(userId).catch(next)
       const payload = information
@@ -108,6 +134,8 @@ class Server {
 
     this.app.post("/get-qnas", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`get-qnas ${req.ip}`)
+      console.log(JSON.stringify(req.body))
+      await logRequest("get-qnas", req)
       const userId = getQNAPayloadCaster(req.body).userId
       const questions = userId !== "" ? 
         (await this.dao.getUserQuestions(userId)).map(row => row['question_id']) :
@@ -132,6 +160,8 @@ class Server {
 
     this.app.post("/submit-qnas", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`submit-qnas ${req.ip}`)
+      console.log(JSON.stringify(req.body))
+      await logRequest("submit-qnas", req)
       const body = submitQNAPayloadCaster(req.body)
       await this.dao.addUserInfomation(body.userId, body.userName)
       await Promise.all(body.qnas.map(qna => this.dao.addAnswer(body.userId, qna.questionId, qna.choiceId)))
@@ -142,6 +172,8 @@ class Server {
 
     this.app.post("/submit-answers", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`submit-answers ${req.ip}`)
+      console.log(JSON.stringify(req.body))
+      await logRequest("submit-answers", req)
       const body = submitAnswersPayloadCaster(req.body)
       await this.dao.addUserInfomation(body.solverUserId, body.solverUserName)
       const questions = (await this.dao.getUserQuestions(body.sourceUserId)).map(row => row['question_id'])
@@ -156,6 +188,8 @@ class Server {
 
     this.app.post("/get-score-board", asyncWrapper(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.log(`get-score-board ${req.ip}`)
+      console.log(JSON.stringify(req.body))
+      await logRequest("get-score-board", req)
       const body = getScoreBoardPayloadCaster(req.body)
       const results = await this.dao.getScoreBoard(body.userId)
       const names = (await Promise.all(results.map(result => this.dao.getUserInformation(result.userId)))).map(row => row.userName)
@@ -184,21 +218,15 @@ class Client {
     this.app.engine('html', (path, options, cb) => ejs.renderFile(path, cb));
     this.app.set('view engine', 'html')
 
-    this.app.get("/*", (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-      if (err) {
-        console.log(err)
-        res.redirect("/exception")
-      }
-      else {
-        console.log(`home ${req.ip}`)
-        res.render('index.html')
-      }
+    this.app.get("/*", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.log(`home ${req.ip}`)
+      res.render('index.html')
     })
   }
 }
 
 const appServer = new Server().app
-const portServer = 37123
+const portServer = process.argv.indexOf("--dev") >= 0 ? 37122 : 37123
 const appClient = new Client().app
 const portClient = 80
 

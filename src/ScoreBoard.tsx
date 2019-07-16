@@ -17,7 +17,7 @@ class ScoreBoardElem extends React.Component {
           style={{ height: "4rem" }}
         >
           <div
-            className="flex-grow-1 d-flex"
+            className="flex-grow-1 d-flex overflow-hidden"
             style={{ boxShadow: "0rem 0.125rem 0.5rem #0002" }}
           >
             <div
@@ -36,16 +36,19 @@ class ScoreBoardElem extends React.Component {
               </span>
             </div>
             <div
-              className="flex-grow-1 pl-2 pt-1"
+              className="flex-grow-1 pl-2 pt-1 overflow-hidden"
               style={{
                 backgroundColor: "#fff"
               }}
             >
               <span
-                className="pl-2 pr-2 bg-dark text-white"
+                className="pl-2 pr-2 bg-dark text-white overflow-hidden"
                 style={{
                   fontSize: "1.3rem",
-                  borderRadius: "0.5rem"
+                  borderRadius: "0.5rem",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap"
                 }}
               >
                 {this.props.name}

@@ -189,10 +189,11 @@ export default class Solve extends React.Component<RouteComponentProps> {
             <br></br>
             <Link className="btn btn-dark mt-3" to="/make">내 우정 테스트 만들기</Link>
             <ScoreBoard userId={this.sourceUserId} highlight={this.userId}></ScoreBoard>
+            <div style={{ height: "4rem" }}></div>
           </div>
         </div>
         {
-          this.userId === null ? (
+          this.userId !== null ? (
             <div className="row">
               <div className="col-12 text-center mt-4 mb-3">
                 재밌으셨나요? 커피 한 잔 사주시는건 어때요? 😉

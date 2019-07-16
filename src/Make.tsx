@@ -161,9 +161,11 @@ export default class Make extends React.Component {
       return <div>문답 등록하는 중...</div>
     }
     else if (this.state.page === "done") {
+      const textEncoded = encodeURIComponent(`#개발자우정테스트 #우정테스트 ${this.state.name}님의 개발자 우정테스트를 풀어보세요!`)
+      const urlEncoded = encodeURIComponent(`http://rwan.ml/solve/?user_id=${this.userId}`)
       return (
         <div className="row h-100 d-flex align-items-center">
-          <div className="col text-center">
+          <div className="col-12 text-center">
             <div>
               <h2>완료!</h2>
               <p>친구들에게 링크를 공유하세요.</p>
@@ -177,7 +179,23 @@ export default class Make extends React.Component {
                 <a href={`/solve/?user_id=${this.userId}`}>
                   {`${Config.HostName}/solve/?user_id=${this.userId}`}
                 </a>
+                <img>
+                </img>
               </div>
+            </div>
+            <div className="col-12 text-center mt-3">
+              <a className="mt-3" href={`https://twitter.com/intent/tweet?text=${textEncoded}&url=${urlEncoded}`}>
+                <img className="mr-1" src="/images/twitter.png" style={{ height: "1.5rem" }}>
+                </img>
+                트위터로 공유하기
+              </a>
+            </div>
+            <div className="col-12 text-center mt-3">
+              <a className="mt-3" href={`http://www.facebook.com/sharer/sharer.php?u=${urlEncoded}`}>
+                <img className="mr-1" src="/images/facebook.png" style={{ height: "1.65rem" }}>
+                </img>
+                페이스북에 공유하기
+              </a>
             </div>
           </div>
         </div>
